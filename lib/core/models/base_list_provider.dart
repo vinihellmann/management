@@ -21,6 +21,7 @@ abstract class BaseListProvider<
   int currentPage = 1;
   int pageSize = 10;
   int totalItems = 0;
+  String orderBy = 'code ASC';
 
   BaseListProvider(this.repository, this.filters);
 
@@ -34,6 +35,7 @@ abstract class BaseListProvider<
         page: currentPage,
         pageSize: pageSize,
         filters: filters.toMap(),
+        orderBy: orderBy,
       );
 
       items = result.items;
@@ -65,6 +67,7 @@ abstract class BaseListProvider<
   void clearFilters() {
     currentPage = 1;
     filters.clear();
+    orderBy = 'code ASC';
     getData();
   }
 

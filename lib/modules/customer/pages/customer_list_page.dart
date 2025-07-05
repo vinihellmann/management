@@ -132,28 +132,45 @@ class _CustomerListView extends StatelessWidget {
           ),
           child: SingleChildScrollView(
             child: Column(
+              spacing: 12,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Filtros', style: AppTextStyles.headlineMedium),
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
+                DropdownButtonFormField<String>(
+                  value: provider.orderBy,
+                  decoration: const InputDecoration(labelText: 'Ordenar por'),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'code ASC',
+                      child: Text('Código (1-9)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'name ASC',
+                      child: Text('Nome (A-Z)'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value == null) return;
+                    provider.orderBy = value;
+                  },
+                ),
                 AppTextField(
                   label: 'Código',
                   initialValue: provider.filters.code,
                   onChanged: (v) => provider.updateFilter('code', v),
                 ),
-                const SizedBox(height: 12),
                 AppTextField(
                   label: 'Nome',
                   initialValue: provider.filters.name,
                   onChanged: (v) => provider.updateFilter('name', v),
                 ),
-                const SizedBox(height: 12),
                 AppTextField(
                   label: 'Documento',
                   initialValue: provider.filters.document,
                   onChanged: (v) => provider.updateFilter('document', v),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

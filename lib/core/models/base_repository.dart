@@ -10,15 +10,13 @@ abstract class BaseRepository<T extends BaseModel> {
 
   BaseRepository(this.db, this.tableName);
 
-  String get defaultOrderBy => 'id ASC';
-
   T fromMap(Map<String, dynamic> map);
 
   Future<PaginatedResult<T>> getAll({
     int page = 1,
     int pageSize = 10,
     Map<String, dynamic>? filters,
-    String? orderBy,
+    required String orderBy,
   }) async {
     try {
       final offset = (page - 1) * pageSize;
@@ -30,16 +28,15 @@ abstract class BaseRepository<T extends BaseModel> {
         tableName,
         where: where,
         whereArgs: whereArgs,
-        orderBy: orderBy ?? defaultOrderBy,
+        orderBy: orderBy,
         limit: pageSize,
         offset: offset,
       );
 
-      final countResult = await db.rawQuery('''
-      SELECT COUNT(*) as total
-      FROM $tableName
-      ${where != null ? 'WHERE $where' : ''}
-      ''', whereArgs);
+      final countResult = await db.rawQuery(
+        'SELECT COUNT(*) as total FROM $tableName ${where != null ? 'WHERE $where' : ''}',
+        whereArgs,
+      );
 
       final total = Sqflite.firstIntValue(countResult) ?? 0;
 

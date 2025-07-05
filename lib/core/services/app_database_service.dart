@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:management/core/database/app_database.dart';
 import 'package:management/core/database/helpers/app_database_helper.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,7 +12,18 @@ class AppDatabaseService {
   late final Database _db;
   Database get db => _db;
 
-  Future<List<Map<String, dynamic>>> rawQuery(String sql, [List<Object?>? arguments]) {
+  void _log(String message) {
+    assert(() {
+      log(message);
+      return true;
+    }());
+  }
+
+  Future<List<Map<String, dynamic>>> rawQuery(
+    String sql, [
+    List<Object?>? arguments,
+  ]) {
+    _log('[RAW] $sql ARGS $arguments}');
     return _db.rawQuery(sql, arguments);
   }
 
@@ -26,6 +39,9 @@ class AppDatabaseService {
     int? limit,
     int? offset,
   }) {
+    _log(
+      '[QUERY] $table WHERE $where ARGS $whereArgs ORDER BY $orderBy LIMIT $limit OFFSET $offset',
+    );
     return _db.query(
       table,
       distinct: distinct,
@@ -48,22 +64,25 @@ class AppDatabaseService {
       values['code'] = await AppDatabaseHelper.generateNextCode(_db, table);
     }
 
+    _log('[INSERT] $table DATA $values');
     return _db.insert(table, values);
   }
 
   Future<int> update(String table, Map<String, dynamic> values, int id) async {
     values['updatedAt'] = DateTime.now().toIso8601String();
 
+    _log('[UPDATE] $table ID = $id DATA $values');
     return _db.update(table, values, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(String table, int id) {
+    _log('[DELETE] $table ID = $id');
     return _db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<Map<String, dynamic>?> getById(String table, int id) async {
+    _log('[GET BY ID] $table ID = $id');
     final result = await _db.query(table, where: 'id = ?', whereArgs: [id]);
-
     if (result.isEmpty) return null;
     return result.first;
   }
