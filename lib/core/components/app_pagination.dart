@@ -18,21 +18,24 @@ class AppPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+      ),
       padding: const EdgeInsets.only(top: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            onPressed: () async => hasPrevious ? onPrevious : null,
-            icon: Icon(Icons.chevron_left),
+            onPressed: hasPrevious ? onPrevious : null,
+            icon: const Icon(Icons.chevron_left),
           ),
           const SizedBox(width: 16),
           Text('Página $currentPage'),
           const SizedBox(width: 16),
           IconButton(
-            onPressed: () async => hasNext ? onNext : null,
-            icon: Icon(Icons.chevron_right),
+            onPressed: hasNext ? onNext : null,
+            icon: const Icon(Icons.chevron_right),
           ),
         ],
       ),

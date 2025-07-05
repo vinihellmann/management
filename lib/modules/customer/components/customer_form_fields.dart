@@ -36,6 +36,7 @@ class CustomerFormFields extends StatelessWidget {
         ),
         AppSectionDescription(description: 'Endereço'),
         AppTextField(
+          isRequired: true,
           label: 'Logradouro',
           controller: provider.addressController,
         ),
@@ -44,12 +45,14 @@ class CustomerFormFields extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField(
+                isRequired: true,
                 label: 'Bairro',
                 controller: provider.neighborhoodController,
               ),
             ),
             Expanded(
               child: AppTextField(
+                isRequired: true,
                 label: 'Número',
                 controller: provider.numberController,
                 keyboardType: TextInputType.number,
@@ -58,12 +61,14 @@ class CustomerFormFields extends StatelessWidget {
           ],
         ),
         AppTextField(
+          isRequired: true,
           label: 'CEP',
           controller: provider.zipController,
           inputFormatters: [InputFormatters.zipMask],
           keyboardType: TextInputType.number,
         ),
         AppSelect<CustomerStateModel>(
+          isRequired: true,
           label: 'Estado',
           value: provider.selectedState,
           onChanged: (s) => provider.selectState(s),
@@ -72,6 +77,7 @@ class CustomerFormFields extends StatelessWidget {
               .toList(),
         ),
         AppSelect<CustomerCityModel>(
+          isRequired: true,
           label: 'Cidade',
           value: provider.selectedCity,
           onChanged: (c) => provider.selectCity(c),

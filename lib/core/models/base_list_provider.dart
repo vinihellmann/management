@@ -14,9 +14,9 @@ abstract class BaseListProvider<T extends BaseModel, F extends BaseFilters>
   int pageSize = 10;
   int totalItems = 0;
 
-  bool get hasMore => items.length == pageSize;
-
   BaseListProvider(this.repository, this.filters);
+
+  bool get hasMore => currentPage * pageSize < totalItems;
 
   Future<void> getData() async {
     isLoading = true;
@@ -28,7 +28,8 @@ abstract class BaseListProvider<T extends BaseModel, F extends BaseFilters>
       filters: filters.toMap(),
     );
 
-    items = result;
+    items = result.items;
+    totalItems = result.total;
     isLoading = false;
     notifyListeners();
   }

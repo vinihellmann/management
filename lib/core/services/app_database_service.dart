@@ -10,8 +10,8 @@ class AppDatabaseService {
   late final Database _db;
   Database get db => _db;
 
-  Future<List<Map<String, dynamic>>> rawQuery(String sql) {
-    return _db.rawQuery(sql);
+  Future<List<Map<String, dynamic>>> rawQuery(String sql, [List<Object?>? arguments]) {
+    return _db.rawQuery(sql, arguments);
   }
 
   Future<List<Map<String, dynamic>>> query(
