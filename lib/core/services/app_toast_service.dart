@@ -48,7 +48,7 @@ class AppToastService {
   }) {
     _show(
       message: message,
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: AppColors.primary,
       toastLength: toastLength,
     );
   }

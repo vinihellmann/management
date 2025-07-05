@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
+import 'package:management/core/services/app_zip_service.dart';
 import 'package:management/modules/customer/components/customer_form_fields.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/providers/customer_form_provider.dart';
@@ -12,13 +13,20 @@ class CustomerFormPage extends StatelessWidget {
   final CustomerModel? customer;
 
   const CustomerFormPage({super.key, this.customer});
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (c) =>
-          CustomerFormProvider(c.read<CustomerRepository>())
-            ..loadData(customer),
-      child: const _CustomerFormView(),
+    return MultiProvider(
+      providers: [
+        Provider(create: (_) => AppZipService()),
+        ChangeNotifierProvider(
+          create: (c) => CustomerFormProvider(
+            c.read<CustomerRepository>(),
+            c.read<AppZipService>(),
+          )..loadData(customer),
+        ),
+      ],
+      child: _CustomerFormView(),
     );
   }
 }

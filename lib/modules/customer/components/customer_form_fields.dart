@@ -61,11 +61,13 @@ class CustomerFormFields extends StatelessWidget {
           ],
         ),
         AppTextField(
-          isRequired: true,
           label: 'CEP',
+          isRequired: true,
+          icon: Icons.search,
           controller: provider.zipController,
-          inputFormatters: [InputFormatters.zipMask],
           keyboardType: TextInputType.number,
+          inputFormatters: [InputFormatters.zipMask],
+          onIconPress: () => provider.fillAddress(),
         ),
         AppSelect<CustomerStateModel>(
           isRequired: true,
