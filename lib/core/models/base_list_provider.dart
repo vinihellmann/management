@@ -3,9 +3,9 @@ import 'package:management/core/models/base_filters.dart';
 import 'package:management/core/models/base_model.dart';
 import 'package:management/core/models/base_repository.dart';
 
-abstract class BaseListProvider<T extends BaseModel, F extends BaseFilters>
+abstract class BaseListProvider<T extends BaseModel, R extends BaseRepository<T>, F extends BaseFilters>
     extends ChangeNotifier {
-  final BaseRepository<T> repository;
+  final R repository;
   final F filters;
 
   List<T> items = [];
