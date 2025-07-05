@@ -14,6 +14,7 @@ class AppLayout extends StatelessWidget {
   final VoidCallback? onBack;
   final double? padding;
   final bool isLoading;
+  final bool withDrawer;
 
   const AppLayout({
     super.key,
@@ -24,6 +25,7 @@ class AppLayout extends StatelessWidget {
     this.onBack,
     this.padding,
     this.isLoading = false,
+    this.withDrawer = true,
   });
 
   @override
@@ -36,11 +38,13 @@ class AppLayout extends StatelessWidget {
         showBack: showBack,
         onBack: onBack,
         leading: const AppThemeToggleButton(),
-        actions: [AppDrawerToggleButton(drawerState: drawerState)],
+        actions: withDrawer
+            ? [AppDrawerToggleButton(drawerState: drawerState)]
+            : null,
       ),
       endDrawerEnableOpenDragGesture: true,
       onEndDrawerChanged: drawerState.setDrawerOpen,
-      endDrawer: const AppDrawer(),
+      endDrawer: withDrawer ? const AppDrawer() : null,
       body: Stack(
         children: [
           Padding(padding: EdgeInsets.all(padding ?? 16), child: body),

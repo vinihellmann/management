@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/components/app_detail_info_card.dart';
 import 'package:management/core/components/app_layout.dart';
+import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/core/themes/app_text_styles.dart';
-import 'package:management/modules/dashboard/components/dashboard_card.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -15,33 +16,41 @@ class DashboardPage extends StatelessWidget {
       title: 'Dashboard',
       showBack: false,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Visão geral', style: AppTextStyles.headlineMedium),
-          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AppSectionDescription(description: 'Visão geral'),
+          ),
           Wrap(
             spacing: 24,
             runSpacing: 24,
+            alignment: WrapAlignment.center,
+            runAlignment: WrapAlignment.center,
             children: [
-              DashboardCard(
+              AppDetailInfoCard(
+                width: 160,
                 title: 'Clientes',
                 value: '128',
                 icon: Icons.people,
                 color: AppColors.primary,
               ),
-              DashboardCard(
+              AppDetailInfoCard(
+                width: 160,
                 title: 'Vendas do mês',
                 value: 'R\$ 12.560,00',
                 icon: Icons.attach_money,
                 color: AppColors.secondary,
               ),
-              DashboardCard(
+              AppDetailInfoCard(
+                width: 160,
                 title: 'A receber',
                 value: 'R\$ 5.420,00',
                 icon: Icons.payment,
                 color: Colors.orange,
               ),
-              DashboardCard(
+              AppDetailInfoCard(
+                width: 160,
                 title: 'Ordens em aberto',
                 value: '8',
                 icon: Icons.build,
@@ -49,9 +58,10 @@ class DashboardPage extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text('Gráficos e relatórios', style: AppTextStyles.headlineMedium),
-          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AppSectionDescription(description: 'Gráficos e relatórios'),
+          ),
           Container(
             width: double.infinity,
             height: 200,

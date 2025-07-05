@@ -28,6 +28,7 @@ class AppThemes {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightInputFill,
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(
@@ -105,6 +106,7 @@ class AppThemes {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkInputFill,
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: AppColors.darkInputBorder),

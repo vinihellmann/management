@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/themes/app_text_styles.dart';
 
-class DashboardCard extends StatelessWidget {
+class AppDetailInfoCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color color;
+  final double? width;
 
-  const DashboardCard({
+  const AppDetailInfoCard({
     super.key,
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    this.width
   });
 
   @override
@@ -20,7 +22,7 @@ class DashboardCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      width: 160,
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,

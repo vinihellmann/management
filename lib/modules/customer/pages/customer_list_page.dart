@@ -81,7 +81,7 @@ class _CustomerListView extends StatelessWidget {
                           customer: c,
                           onTap: () async {
                             final result = await context.pushNamed(
-                              AppRouteNames.customerForm,
+                              AppRouteNames.customerDetail,
                               extra: c,
                             );
 

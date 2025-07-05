@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:management/core/themes/app_text_styles.dart';
 
 class AppTextField extends StatelessWidget {
@@ -13,6 +14,7 @@ class AppTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool enabled;
   final String? initialValue;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
     super.key,
@@ -27,6 +29,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.initialValue,
+    this.inputFormatters,
   });
 
   String? _isRequired(String? value) {
@@ -48,18 +51,13 @@ class AppTextField extends StatelessWidget {
           obscureText: obscureText,
           maxLines: maxLines,
           validator: isRequired ? _isRequired : validator,
+          inputFormatters: inputFormatters,
           onChanged: onChanged,
           enabled: enabled,
           style: AppTextStyles.input.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          decoration: InputDecoration(
-            hintText: hint,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 12,
-            ),
-          ),
+          decoration: InputDecoration(hintText: hint),
         ),
       ],
     );

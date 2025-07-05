@@ -53,13 +53,15 @@ class CustomerRepository extends BaseRepository<CustomerModel> {
   }
 
   Future<List<CustomerStateModel>> getAllStates() async {
-    final result = await db.rawQuery('SELECT * FROM states ORDER BY name');
+    final result = await db.rawQuery(
+      'SELECT * FROM ${AppTableNames.states} ORDER BY name',
+    );
     return result.map((e) => CustomerStateModel.fromMap(e)).toList();
   }
 
   Future<List<CustomerCityModel>> getCitiesByStateId(int stateId) async {
     final result = await db.rawQuery(
-      'SELECT * FROM cities WHERE state_id = $stateId ORDER BY name',
+      'SELECT * FROM ${AppTableNames.cities} WHERE state_id = $stateId ORDER BY name',
     );
     return result.map((e) => CustomerCityModel.fromMap(e)).toList();
   }

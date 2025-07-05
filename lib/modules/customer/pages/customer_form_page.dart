@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
-import 'package:management/core/components/app_select.dart';
-import 'package:management/core/components/app_text_field.dart';
-import 'package:management/modules/customer/models/customer_city_model.dart';
+import 'package:management/modules/customer/components/customer_form_fields.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
-import 'package:management/modules/customer/models/customer_state_model.dart';
 import 'package:management/modules/customer/providers/customer_form_provider.dart';
 import 'package:management/modules/customer/repositories/customer_repository.dart';
 import 'package:provider/provider.dart';
@@ -36,72 +33,16 @@ class _CustomerFormView extends StatelessWidget {
 
     return AppLayout(
       title: isEdit ? 'Editar Cliente' : 'Novo Cliente',
+      withDrawer: false,
       isLoading: provider.isSaving,
       body: Form(
         key: provider.formKey,
         autovalidateMode: AutovalidateMode.onUnfocus,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppTextField(
-                isRequired: true,
-                label: 'Nome',
-                controller: provider.nameController,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                isRequired: true,
-                label: 'Documento',
-                controller: provider.documentController,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                label: 'Email',
-                controller: provider.emailController,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                label: 'Telefone',
-                controller: provider.phoneController,
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                label: 'Endereço',
-                controller: provider.addressController,
-              ),
-              const SizedBox(height: 12),
-              AppSelect<CustomerStateModel>(
-                label: 'Estado',
-                value: provider.selectedState,
-                onChanged: (s) => provider.selectState(s),
-                items: provider.states
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s.name)))
-                    .toList(),
-              ),
-              const SizedBox(height: 12),
-              AppSelect<CustomerCityModel>(
-                label: 'Cidade',
-                value: provider.selectedCity,
-                onChanged: (c) => provider.selectCity(c),
-                items: provider.cities
-                    .map((c) => DropdownMenuItem(value: c, child: Text(c.name)))
-                    .toList(),
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                label: 'CEP',
-                controller: provider.zipcodeController,
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
+        child: SingleChildScrollView(child: CustomerFormFields()),
       ),
       floatingActionButton: AppButton(
-        type: AppButtonType.fab,
+        type: AppButtonType.filled,
+        text: 'Salvar',
         icon: Icons.check,
         tooltip: 'Salvar',
         onPressed: () async {

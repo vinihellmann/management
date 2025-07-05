@@ -8,6 +8,7 @@ class AppButton extends StatefulWidget {
   final Future<void> Function()? onPressed;
   final String? tooltip;
   final AppButtonType type;
+  final Color? color;
 
   const AppButton({
     super.key,
@@ -15,6 +16,7 @@ class AppButton extends StatefulWidget {
     this.icon,
     this.onPressed,
     this.tooltip,
+    this.color,
     this.type = AppButtonType.filled,
   });
 
@@ -56,17 +58,36 @@ class _AppButtonState extends State<AppButton> {
 
     switch (widget.type) {
       case AppButtonType.filled:
-        return ElevatedButton(onPressed: _handlePress, child: child);
+        return ElevatedButton(
+          onPressed: _handlePress,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(widget.color),
+          ),
+          child: child,
+        );
 
       case AppButtonType.outline:
-        return OutlinedButton(onPressed: _handlePress, child: child);
+        return OutlinedButton(
+          onPressed: _handlePress,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(widget.color),
+          ),
+          child: child,
+        );
 
       case AppButtonType.text:
-        return TextButton(onPressed: _handlePress, child: child);
+        return TextButton(
+          onPressed: _handlePress,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(widget.color),
+          ),
+          child: child,
+        );
 
       case AppButtonType.fab:
         return FloatingActionButton(
           tooltip: widget.tooltip,
+          backgroundColor: widget.color,
           onPressed: _handlePress,
           child: Icon(widget.icon),
         );

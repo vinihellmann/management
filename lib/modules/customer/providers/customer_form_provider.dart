@@ -8,11 +8,16 @@ import 'package:management/modules/customer/repositories/customer_repository.dar
 class CustomerFormProvider
     extends BaseFormProvider<CustomerModel, CustomerRepository> {
   final nameController = TextEditingController();
+  final fantasyController = TextEditingController();
   final documentController = TextEditingController();
+  final addressController = TextEditingController();
+  final neighborhoodController = TextEditingController();
+  final numberController = TextEditingController();
+  final zipController = TextEditingController();
+  final complementController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  final addressController = TextEditingController();
-  final zipcodeController = TextEditingController();
+  final contactController = TextEditingController();
 
   List<CustomerStateModel> states = [];
   List<CustomerCityModel> cities = [];
@@ -48,11 +53,16 @@ class CustomerFormProvider
     this.model = model;
 
     nameController.text = model?.name ?? '';
+    fantasyController.text = model?.fantasy ?? '';
     documentController.text = model?.document ?? '';
     emailController.text = model?.email ?? '';
     phoneController.text = model?.phone ?? '';
     addressController.text = model?.address ?? '';
-    zipcodeController.text = model?.zipcode ?? '';
+    neighborhoodController.text = model?.neighborhood ?? '';
+    numberController.text = model?.number ?? '';
+    zipController.text = model?.zipcode ?? '';
+    complementController.text = model?.complement ?? '';
+    contactController.text = model?.contact ?? '';
 
     await loadStates();
 
@@ -88,13 +98,19 @@ class CustomerFormProvider
       id: model?.id,
       code: model?.code,
       name: nameController.text.trim(),
+      fantasy: fantasyController.text.trim(),
       document: documentController.text.trim(),
       email: emailController.text.trim(),
       phone: phoneController.text.trim(),
       address: addressController.text.trim(),
-      zipcode: zipcodeController.text.trim(),
+      neighborhood: neighborhoodController.text.trim(),
+      number: numberController.text.trim(),
+      zipcode: zipController.text.trim(),
+      complement: complementController.text.trim(),
+      contact: contactController.text.trim(),
       city: selectedCity?.name,
       state: selectedState?.acronym,
+      createdAt: model?.createdAt,
     );
 
     if (isEdit) {
@@ -111,11 +127,16 @@ class CustomerFormProvider
   @override
   void dispose() {
     nameController.dispose();
+    fantasyController.dispose();
     documentController.dispose();
     emailController.dispose();
     phoneController.dispose();
     addressController.dispose();
-    zipcodeController.dispose();
+    neighborhoodController.dispose();
+    numberController.dispose();
+    zipController.dispose();
+    complementController.dispose();
+    contactController.dispose();
     super.dispose();
   }
 }
