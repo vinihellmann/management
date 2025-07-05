@@ -1,3 +1,4 @@
+import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_model.dart';
 import 'package:management/core/models/paginated_result.dart';
 import 'package:management/core/services/app_database_service.dart';
@@ -19,50 +20,90 @@ abstract class BaseRepository<T extends BaseModel> {
     Map<String, dynamic>? filters,
     String? orderBy,
   }) async {
-    final offset = (page - 1) * pageSize;
+    try {
+      final offset = (page - 1) * pageSize;
 
-    final where = buildWhere(filters);
-    final whereArgs = buildWhereArgs(filters);
+      final where = buildWhere(filters);
+      final whereArgs = buildWhereArgs(filters);
 
-    final result = await db.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-      orderBy: orderBy ?? defaultOrderBy,
-      limit: pageSize,
-      offset: offset,
-    );
+      final result = await db.query(
+        tableName,
+        where: where,
+        whereArgs: whereArgs,
+        orderBy: orderBy ?? defaultOrderBy,
+        limit: pageSize,
+        offset: offset,
+      );
 
-    final countResult = await db.rawQuery('''
+      final countResult = await db.rawQuery('''
       SELECT COUNT(*) as total
       FROM $tableName
       ${where != null ? 'WHERE $where' : ''}
       ''', whereArgs);
 
-    final total = Sqflite.firstIntValue(countResult) ?? 0;
+      final total = Sqflite.firstIntValue(countResult) ?? 0;
 
-    return PaginatedResult(
-      items: result.map((map) => fromMap(map)).toList(),
-      total: total,
-    );
+      return PaginatedResult(
+        items: result.map((map) => fromMap(map)).toList(),
+        total: total,
+      );
+    } catch (e, stack) {
+      throw AppException(
+        'Ocorreu um erro ao buscar os registros',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 
   Future<T?> getById(int id) async {
-    final map = await db.getById(tableName, id);
-    return map != null ? fromMap(map) : null;
+    try {
+      final map = await db.getById(tableName, id);
+      return map != null ? fromMap(map) : null;
+    } catch (e, stack) {
+      throw AppException(
+        'Ocorreu um erro ao buscar o registro',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 
   Future<int> insert(T model) {
-    return db.insert(tableName, model.toMap());
+    try {
+      return db.insert(tableName, model.toMap());
+    } catch (e, stack) {
+      throw AppException(
+        'Ocorreu um erro ao inserir o registro',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 
   Future<int> update(T model) {
-    if (model.id == null) throw Exception('ID obrigatório para atualização');
-    return db.update(tableName, model.toMap(), model.id!);
+    try {
+      if (model.id == null) throw Exception('ID obrigatório para atualização');
+      return db.update(tableName, model.toMap(), model.id!);
+    } catch (e, stack) {
+      throw AppException(
+        'Ocorreu um erro ao atualizar o registro',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 
   Future<int> delete(int id) {
-    return db.delete(tableName, id);
+    try {
+      return db.delete(tableName, id);
+    } catch (e, stack) {
+      throw AppException(
+        'Ocorreu um erro ao deletar o registro',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 
   String? buildWhere(Map<String, dynamic>? filters) {

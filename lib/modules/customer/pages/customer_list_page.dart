@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
+import 'package:management/core/components/app_loader.dart';
 import 'package:management/core/components/app_pagination.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/core/constants/app_route_names.dart';
@@ -34,7 +35,6 @@ class _CustomerListView extends StatelessWidget {
 
     return AppLayout(
       padding: 12,
-      isLoading: provider.isLoading,
       title: 'Clientes',
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -55,7 +55,9 @@ class _CustomerListView extends StatelessWidget {
                       AppRouteNames.customerForm,
                     );
 
-                    if (result == true && context.mounted) provider.getData();
+                    if (result == true && context.mounted) {
+                      provider.getData();
+                    }
                   },
                 ),
                 IconButton(
@@ -66,7 +68,9 @@ class _CustomerListView extends StatelessWidget {
               ],
             ),
           ),
-          if (customers.isEmpty)
+          if (provider.isLoading)
+            const Expanded(child: Center(child: AppLoader()))
+          else if (customers.isEmpty)
             const Expanded(
               child: Center(child: Text('Nenhum cliente encontrado')),
             )

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:management/core/components/app_drawer.dart';
 import 'package:management/core/components/app_drawer_controller.dart';
 import 'package:management/core/components/app_drawer_toggle_button.dart';
-import 'package:management/core/components/app_loading_overlay.dart';
 import 'package:management/core/components/app_nav_bar.dart';
 import 'package:management/core/components/app_theme_toggle_button.dart';
 
@@ -13,7 +12,6 @@ class AppLayout extends StatelessWidget {
   final bool showBack;
   final VoidCallback? onBack;
   final double? padding;
-  final bool isLoading;
   final bool withDrawer;
 
   const AppLayout({
@@ -24,7 +22,6 @@ class AppLayout extends StatelessWidget {
     this.showBack = true,
     this.onBack,
     this.padding,
-    this.isLoading = false,
     this.withDrawer = true,
   });
 
@@ -45,12 +42,7 @@ class AppLayout extends StatelessWidget {
       endDrawerEnableOpenDragGesture: true,
       onEndDrawerChanged: drawerState.setDrawerOpen,
       endDrawer: withDrawer ? const AppDrawer() : null,
-      body: Stack(
-        children: [
-          Padding(padding: EdgeInsets.all(padding ?? 16), child: body),
-          AppLoadingOverlay(visible: isLoading),
-        ],
-      ),
+      body: Padding(padding: EdgeInsets.all(padding ?? 16), child: body),
       floatingActionButton: floatingActionButton,
     );
   }

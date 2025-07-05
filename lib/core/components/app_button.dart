@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/components/app_loader.dart';
+import 'package:management/core/themes/app_colors.dart';
 
 enum AppButtonType { filled, outline, text, fab }
 
@@ -9,6 +11,7 @@ class AppButton extends StatefulWidget {
   final String? tooltip;
   final AppButtonType type;
   final Color? color;
+  final bool? isLoading;
 
   const AppButton({
     super.key,
@@ -18,6 +21,7 @@ class AppButton extends StatefulWidget {
     this.tooltip,
     this.color,
     this.type = AppButtonType.filled,
+    this.isLoading,
   });
 
   @override
@@ -26,12 +30,16 @@ class AppButton extends StatefulWidget {
 
 class _AppButtonState extends State<AppButton> {
   Future<void> _handlePress() async {
-    if (widget.onPressed == null) return;
+    if (widget.isLoading == true || widget.onPressed == null) return;
 
     await widget.onPressed?.call();
   }
 
   Widget _buildChild() {
+    if (widget.isLoading == true) {
+      return AppLoader(color: AppColors.darkText, strokeWidth: 2, size: 20);
+    }
+
     final hasText = widget.text != null && widget.text!.isNotEmpty;
     final hasIcon = widget.icon != null;
 

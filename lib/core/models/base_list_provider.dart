@@ -1,9 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_filters.dart';
 import 'package:management/core/models/base_model.dart';
 import 'package:management/core/models/base_repository.dart';
+import 'package:management/core/services/app_toast_service.dart';
 
-abstract class BaseListProvider<T extends BaseModel, R extends BaseRepository<T>, F extends BaseFilters>
+abstract class BaseListProvider<
+  T extends BaseModel,
+  R extends BaseRepository<T>,
+  F extends BaseFilters
+>
     extends ChangeNotifier {
   final R repository;
   final F filters;
@@ -18,35 +26,39 @@ abstract class BaseListProvider<T extends BaseModel, R extends BaseRepository<T>
 
   bool get hasMore => currentPage * pageSize < totalItems;
 
-  Future<void> getData() async {
-    isLoading = true;
-    notifyListeners();
+  Future<void> getData([bool showLoading = true]) async {
+    try {
+      changeLoading(showLoading);
 
-    final result = await repository.getAll(
-      page: currentPage,
-      pageSize: pageSize,
-      filters: filters.toMap(),
-    );
+      final result = await repository.getAll(
+        page: currentPage,
+        pageSize: pageSize,
+        filters: filters.toMap(),
+      );
 
-    items = result.items;
-    totalItems = result.total;
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void updateFilter(String key, String? value) {
-    filters.update(key, value);
+      items = result.items;
+      totalItems = result.total;
+    } on AppException catch (e) {
+      log("[BaseListProvider]::getData - ${e.message} - ${e.detail}");
+      AppToastService.showError(e.message);
+    } catch (e) {
+      log("[BaseListProvider]::getData - $e");
+      AppToastService.showError('Erro desconhecido ao buscar os registros');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   void nextPage() {
     currentPage++;
-    getData();
+    getData(false);
   }
 
   void previousPage() {
     if (currentPage > 1) {
       currentPage--;
-      getData();
+      getData(false);
     }
   }
 
@@ -54,5 +66,14 @@ abstract class BaseListProvider<T extends BaseModel, R extends BaseRepository<T>
     currentPage = 1;
     filters.clear();
     getData();
+  }
+
+  void updateFilter(String key, String? value) {
+    filters.update(key, value);
+  }
+
+  void changeLoading(bool reflectUI) {
+    isLoading = !isLoading;
+    if (reflectUI) notifyListeners();
   }
 }

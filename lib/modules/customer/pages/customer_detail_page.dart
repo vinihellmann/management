@@ -18,19 +18,20 @@ class CustomerDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => CustomerDetailProvider(ctx.read(), customer),
-      child: const _CustomerDetailView(),
+      create: (ctx) => CustomerDetailProvider(ctx.read()),
+      child: _CustomerDetailView(customer),
     );
   }
 }
 
 class _CustomerDetailView extends StatelessWidget {
-  const _CustomerDetailView();
+  const _CustomerDetailView(this.c);
+
+  final CustomerModel c;
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CustomerDetailProvider>();
-    final c = provider.customer;
 
     return AppLayout(
       withDrawer: false,
@@ -108,7 +109,7 @@ class _CustomerDetailView extends StatelessWidget {
               final confirmed = await Utils.showDeleteDialog(context);
 
               if (confirmed == true) {
-                await provider.deleteCustomer();
+                await provider.delete(c);
                 if (context.mounted) context.pop(true);
               }
             },

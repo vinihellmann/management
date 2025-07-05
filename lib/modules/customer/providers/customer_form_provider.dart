@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_form_provider.dart';
+import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/customer/models/customer_city_model.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/models/customer_state_model.dart';
@@ -28,17 +32,33 @@ class CustomerFormProvider
   CustomerFormProvider(super.repository);
 
   Future<void> loadStates() async {
-    states = await repository.getAllStates();
-    notifyListeners();
+    try {
+      states = await repository.getAllStates();
+      notifyListeners();
+    } on AppException catch (e) {
+      log("[CustomerFormProvider]::loadStates - ${e.message} - ${e.detail}");
+      AppToastService.showError(e.message);
+    } catch (e) {
+      log("[CustomerFormProvider]::loadStates - $e");
+      AppToastService.showError('Erro desconhecido ao carregar os estados');
+    }
   }
 
   Future<void> selectState(CustomerStateModel? state) async {
-    if (state == null) return;
+    try {
+      if (state == null) return;
 
-    selectedState = state;
-    cities = await repository.getCitiesByStateId(state.id);
-    selectedCity = null;
-    notifyListeners();
+      selectedState = state;
+      cities = await repository.getCitiesByStateId(state.id);
+      selectedCity = null;
+      notifyListeners();
+    } on AppException catch (e) {
+      log("[CustomerFormProvider]::selectState - ${e.message} - ${e.detail}");
+      AppToastService.showError(e.message);
+    } catch (e) {
+      log("[CustomerFormProvider]::selectState - $e");
+      AppToastService.showError('Erro desconhecido ao selecionar o estado');
+    }
   }
 
   void selectCity(CustomerCityModel? city) {
@@ -50,38 +70,46 @@ class CustomerFormProvider
 
   @override
   Future<void> loadData(CustomerModel? model) async {
-    this.model = model;
+    try {
+      this.model = model;
 
-    nameController.text = model?.name ?? '';
-    fantasyController.text = model?.fantasy ?? '';
-    documentController.text = model?.document ?? '';
-    emailController.text = model?.email ?? '';
-    phoneController.text = model?.phone ?? '';
-    addressController.text = model?.address ?? '';
-    neighborhoodController.text = model?.neighborhood ?? '';
-    numberController.text = model?.number ?? '';
-    zipController.text = model?.zipcode ?? '';
-    complementController.text = model?.complement ?? '';
-    contactController.text = model?.contact ?? '';
+      nameController.text = model?.name ?? '';
+      fantasyController.text = model?.fantasy ?? '';
+      documentController.text = model?.document ?? '';
+      emailController.text = model?.email ?? '';
+      phoneController.text = model?.phone ?? '';
+      addressController.text = model?.address ?? '';
+      neighborhoodController.text = model?.neighborhood ?? '';
+      numberController.text = model?.number ?? '';
+      zipController.text = model?.zipcode ?? '';
+      complementController.text = model?.complement ?? '';
+      contactController.text = model?.contact ?? '';
 
-    await loadStates();
+      await loadStates();
 
-    if (model?.state != null) {
-      final state = states.firstWhere(
-        (s) => s.acronym == model!.state,
-        orElse: () => states.first,
-      );
+      if (model?.state != null) {
+        final state = states.firstWhere(
+          (s) => s.acronym == model!.state,
+          orElse: () => states.first,
+        );
 
-      await selectState(state);
-    }
+        await selectState(state);
+      }
 
-    if (model?.city != null && cities.isNotEmpty) {
-      final city = cities.firstWhere(
-        (c) => c.name == model!.city,
-        orElse: () => cities.first,
-      );
+      if (model?.city != null && cities.isNotEmpty) {
+        final city = cities.firstWhere(
+          (c) => c.name == model!.city,
+          orElse: () => cities.first,
+        );
 
-      selectCity(city);
+        selectCity(city);
+      }
+    } on AppException catch (e) {
+      log("[CustomerFormProvider]::loadData - ${e.message} - ${e.detail}");
+      AppToastService.showError(e.message);
+    } catch (e) {
+      log("[CustomerFormProvider]::loadData - $e");
+      AppToastService.showError('Erro desconhecido ao carregar os dados');
     }
   }
 
@@ -89,39 +117,49 @@ class CustomerFormProvider
   Future<bool?> save() async {
     if (!formKey.currentState!.validate()) return false;
 
-    isSaving = true;
-    notifyListeners();
+    try {
+      changeSaving();
 
-    final isEdit = model != null;
+      final isEdit = model != null;
 
-    final customer = CustomerModel(
-      id: model?.id,
-      code: model?.code,
-      name: nameController.text.trim(),
-      fantasy: fantasyController.text.trim(),
-      document: documentController.text.trim(),
-      email: emailController.text.trim(),
-      phone: phoneController.text.trim(),
-      address: addressController.text.trim(),
-      neighborhood: neighborhoodController.text.trim(),
-      number: numberController.text.trim(),
-      zipcode: zipController.text.trim(),
-      complement: complementController.text.trim(),
-      contact: contactController.text.trim(),
-      city: selectedCity?.name,
-      state: selectedState?.acronym,
-      createdAt: model?.createdAt,
-    );
+      final customer = CustomerModel(
+        id: model?.id,
+        code: model?.code,
+        name: nameController.text.trim(),
+        fantasy: fantasyController.text.trim(),
+        document: documentController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        address: addressController.text.trim(),
+        neighborhood: neighborhoodController.text.trim(),
+        number: numberController.text.trim(),
+        zipcode: zipController.text.trim(),
+        complement: complementController.text.trim(),
+        contact: contactController.text.trim(),
+        city: selectedCity?.name,
+        state: selectedState?.acronym,
+        createdAt: model?.createdAt,
+      );
 
-    if (isEdit) {
-      await repository.update(customer);
-    } else {
-      await repository.insert(customer);
+      if (isEdit) {
+        await repository.update(customer);
+      } else {
+        await repository.insert(customer);
+      }
+
+      AppToastService.showSuccess('Registro salvo com sucesso');
+      return true;
+    } on AppException catch (e) {
+      log("[CustomerFormProvider]::save - ${e.message} - ${e.detail}");
+      AppToastService.showError(e.message);
+      return false;
+    } catch (e) {
+      log("[CustomerFormProvider]::save - $e");
+      AppToastService.showError('Erro desconhecido ao salvar o registro');
+      return false;
+    } finally {
+      changeSaving();
     }
-
-    isSaving = false;
-    notifyListeners();
-    return true;
   }
 
   @override

@@ -17,4 +17,9 @@ abstract class BaseFormProvider<
 
   void loadData(T? model);
   Future<bool?> save();
+
+  void changeSaving() {
+    isSaving = !isSaving;
+    notifyListeners();
+  }
 }

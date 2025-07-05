@@ -34,13 +34,13 @@ class _CustomerFormView extends StatelessWidget {
     return AppLayout(
       title: isEdit ? 'Editar Cliente' : 'Novo Cliente',
       withDrawer: false,
-      isLoading: provider.isSaving,
       body: Form(
         key: provider.formKey,
         autovalidateMode: AutovalidateMode.onUnfocus,
         child: SingleChildScrollView(child: CustomerFormFields()),
       ),
       floatingActionButton: AppButton(
+        isLoading: provider.isSaving,
         type: AppButtonType.filled,
         text: 'Salvar',
         icon: Icons.check,
