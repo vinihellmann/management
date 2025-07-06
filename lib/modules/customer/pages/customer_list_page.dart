@@ -103,6 +103,7 @@ class _CustomerListView extends StatelessWidget {
                     child: ListView.separated(
                       itemCount: customers.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                       itemBuilder: (_, index) {
                         final c = customers[index];
                         return CustomerListItem(

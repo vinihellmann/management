@@ -37,6 +37,7 @@ class _CustomerDetailView extends StatelessWidget {
       withDrawer: false,
       title: 'Detalhes',
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(12),
         child: Wrap(
           spacing: 24,
           runSpacing: 24,
@@ -47,7 +48,7 @@ class _CustomerDetailView extends StatelessWidget {
               width: double.infinity,
               title: 'Código',
               value: c.code ?? '',
-              icon: Icons.code,
+              icon: Icons.qr_code,
               color: AppColors.primary,
             ),
             AppDetailInfoCard(
