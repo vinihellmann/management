@@ -104,7 +104,7 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
                   title: 'Ordens em aberto',
                   value: '8',
                   icon: Icons.build,
-                  color: Colors.redAccent,
+                  color: AppColors.lightError,
                 ),
               ],
             ),

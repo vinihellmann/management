@@ -37,7 +37,7 @@ class AppToastService {
   }) {
     _show(
       message: message,
-      backgroundColor: Colors.red[700]!,
+      backgroundColor: AppColors.lightError,
       toastLength: toastLength,
     );
   }

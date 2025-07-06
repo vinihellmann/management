@@ -165,12 +165,12 @@ class _CustomerListView extends StatelessWidget {
                   onChanged: (v) => provider.updateFilter('code', v),
                 ),
                 AppTextField(
-                  label: 'Nome',
+                  label: 'Nome/Razão Social',
                   initialValue: provider.filters.name,
                   onChanged: (v) => provider.updateFilter('name', v),
                 ),
                 AppTextField(
-                  label: 'Documento',
+                  label: 'CPF/CNPJ',
                   initialValue: provider.filters.document,
                   onChanged: (v) => provider.updateFilter('document', v),
                 ),
