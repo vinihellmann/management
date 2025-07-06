@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Utils {
+  static double? parseCurrency(String text) {
+    return double.tryParse(text.replaceAll('.', '').replaceAll(',', '.'));
+  }
+
   static Future<bool?> showDeleteDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,

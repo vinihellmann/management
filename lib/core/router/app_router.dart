@@ -6,6 +6,9 @@ import 'package:management/modules/customer/pages/customer_detail_page.dart';
 import 'package:management/modules/customer/pages/customer_form_page.dart';
 import 'package:management/modules/customer/pages/customer_list_page.dart';
 import 'package:management/modules/dashboard/pages/dashboard_page.dart';
+import 'package:management/modules/product/models/product_model.dart';
+import 'package:management/modules/product/pages/product_form_page.dart';
+import 'package:management/modules/product/pages/product_list_page.dart';
 
 class AppRouter {
   static final routerObserver = RouteObserver<PageRoute>();
@@ -38,6 +41,27 @@ class AppRouter {
         builder: (context, state) {
           final extra = state.extra as CustomerModel;
           return CustomerDetailPage(customer: extra);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.products,
+        name: AppRouteNames.products,
+        builder: (context, state) => const ProductListPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.productForm,
+        name: AppRouteNames.productForm,
+        builder: (context, state) {
+          final extra = state.extra as ProductModel?;
+          return ProductFormPage(product: extra);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.productDetail,
+        name: AppRouteNames.productDetail,
+        builder: (context, state) {
+          // final extra = state.extra as ProductModel;
+          return Container();
         },
       ),
     ],
