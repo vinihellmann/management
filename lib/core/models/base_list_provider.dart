@@ -26,6 +26,8 @@ abstract class BaseListProvider<
   BaseListProvider(this.repository, this.filters);
 
   bool get hasMore => currentPage * pageSize < totalItems;
+  int get totalItemsShown => (currentPage - 1) * pageSize + items.length;
+  int get totalPages => (totalItems / pageSize).ceil();
 
   Future<void> getData([bool showLoading = true]) async {
     try {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:management/core/themes/app_text_styles.dart';
 
 class AppSelect<T> extends StatelessWidget {
   const AppSelect({
@@ -27,7 +26,7 @@ class AppSelect<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.bodyMedium),
+        Text(label),
         const SizedBox(height: 6),
         DropdownButtonFormField(
           value: value,

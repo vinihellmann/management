@@ -43,10 +43,13 @@ class _CustomerListView extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Text(
+                  'Exibindo ${provider.totalItemsShown} de ${provider.totalItems} registros',
+                ),
+                Spacer(),
                 IconButton(
                   tooltip: 'Adicionar',
                   icon: Icon(Icons.add),
@@ -106,6 +109,7 @@ class _CustomerListView extends StatelessWidget {
                     hasNext: provider.hasMore,
                     onPrevious: provider.previousPage,
                     onNext: provider.nextPage,
+                    totalPages: provider.totalPages,
                   ),
                 ],
               ),
@@ -175,6 +179,7 @@ class _CustomerListView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppButton(
+                      tooltip: 'Limpar',
                       text: 'Limpar',
                       icon: Icons.clear_all,
                       onPressed: () async {
@@ -183,6 +188,7 @@ class _CustomerListView extends StatelessWidget {
                       },
                     ),
                     AppButton(
+                      tooltip: 'Buscar',
                       text: 'Buscar',
                       icon: Icons.search,
                       onPressed: () async {

@@ -101,8 +101,8 @@ class _CustomerDetailView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           AppButton(
+            tooltip: 'Deletar',
             icon: Icons.delete,
-            text: 'Excluir',
             color: Theme.of(context).colorScheme.error,
             type: AppButtonType.fab,
             onPressed: () async {
@@ -115,6 +115,7 @@ class _CustomerDetailView extends StatelessWidget {
             },
           ),
           AppButton(
+            tooltip: 'Editar',
             icon: Icons.edit,
             text: 'Editar',
             color: AppColors.secondary,

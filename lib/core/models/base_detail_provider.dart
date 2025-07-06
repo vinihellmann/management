@@ -28,7 +28,7 @@ abstract class BaseDetailProvider<
       AppToastService.showError(e.message);
     } catch (e) {
       log("[BaseDetailProvider]::delete - $e");
-      AppToastService.showError('Erro desconhecido ao excluir o registro');
+      AppToastService.showError('Erro desconhecido ao deletar o registro');
     } finally {
       changeDeleting();
     }

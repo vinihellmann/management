@@ -46,7 +46,7 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.bodyMedium),
+        Text(label),
         const SizedBox(height: 6),
         TextFormField(
           initialValue: initialValue,

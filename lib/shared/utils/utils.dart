@@ -6,7 +6,7 @@ class Utils {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confirmar exclusão'),
-        content: const Text('Deseja realmente excluir o registro?'),
+        content: const Text('Deseja realmente deletar o registro?'),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
           TextButton(
@@ -15,7 +15,7 @@ class Utils {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Excluir'),
+            child: const Text('Confirmar'),
           ),
         ],
       ),

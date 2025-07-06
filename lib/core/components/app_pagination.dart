@@ -6,6 +6,7 @@ class AppPagination extends StatelessWidget {
   final VoidCallback? onPrevious;
   final bool hasNext;
   final bool hasPrevious;
+  final int totalPages;
 
   const AppPagination({
     super.key,
@@ -14,6 +15,7 @@ class AppPagination extends StatelessWidget {
     this.onPrevious,
     this.hasNext = true,
     this.hasPrevious = true,
+    required this.totalPages,
   });
 
   @override
@@ -27,13 +29,15 @@ class AppPagination extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
+            tooltip: 'Página Anterior',
             onPressed: hasPrevious ? onPrevious : null,
             icon: const Icon(Icons.chevron_left),
           ),
           const SizedBox(width: 16),
-          Text('Página $currentPage'),
+          Text('Página $currentPage de $totalPages'),
           const SizedBox(width: 16),
           IconButton(
+            tooltip: 'Próxima Página',
             onPressed: hasNext ? onNext : null,
             icon: const Icon(Icons.chevron_right),
           ),
