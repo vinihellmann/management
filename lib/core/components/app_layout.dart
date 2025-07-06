@@ -11,7 +11,6 @@ class AppLayout extends StatelessWidget {
   final Widget? floatingActionButton;
   final bool showBack;
   final VoidCallback? onBack;
-  final double? padding;
   final bool withDrawer;
 
   const AppLayout({
@@ -21,7 +20,6 @@ class AppLayout extends StatelessWidget {
     this.floatingActionButton,
     this.showBack = true,
     this.onBack,
-    this.padding,
     this.withDrawer = true,
   });
 
@@ -42,7 +40,7 @@ class AppLayout extends StatelessWidget {
       endDrawerEnableOpenDragGesture: true,
       onEndDrawerChanged: drawerState.setDrawerOpen,
       endDrawer: withDrawer ? const AppDrawer() : null,
-      body: Padding(padding: EdgeInsets.all(padding ?? 16), child: body),
+      body: body,
       floatingActionButton: floatingActionButton,
     );
   }

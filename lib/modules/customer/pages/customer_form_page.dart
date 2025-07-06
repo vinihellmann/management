@@ -45,7 +45,10 @@ class _CustomerFormView extends StatelessWidget {
       body: Form(
         key: provider.formKey,
         autovalidateMode: AutovalidateMode.onUnfocus,
-        child: SingleChildScrollView(child: CustomerFormFields()),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(12),
+          child: CustomerFormFields(),
+        ),
       ),
       floatingActionButton: AppButton(
         isLoading: provider.isSaving,

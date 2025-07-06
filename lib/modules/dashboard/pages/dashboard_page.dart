@@ -65,6 +65,7 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
       title: 'Dashboard',
       showBack: false,
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -75,9 +75,9 @@ class AppDatabaseService {
     return _db.update(table, values, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> delete(String table, int id) {
+  Future<int> delete(String table, int id, [String? field]) {
     _log('[DELETE] $table ID = $id');
-    return _db.delete(table, where: 'id = ?', whereArgs: [id]);
+    return _db.delete(table, where: field != null ? '$field = ?' : 'id = ?', whereArgs: [id]);
   }
 
   Future<Map<String, dynamic>?> getById(String table, int id) async {

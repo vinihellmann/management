@@ -24,7 +24,7 @@ class AppPagination extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
       ),
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
