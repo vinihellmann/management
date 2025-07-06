@@ -7,6 +7,7 @@ import 'package:management/modules/customer/pages/customer_form_page.dart';
 import 'package:management/modules/customer/pages/customer_list_page.dart';
 import 'package:management/modules/dashboard/pages/dashboard_page.dart';
 import 'package:management/modules/product/models/product_model.dart';
+import 'package:management/modules/product/pages/product_detail_page.dart';
 import 'package:management/modules/product/pages/product_form_page.dart';
 import 'package:management/modules/product/pages/product_list_page.dart';
 
@@ -60,8 +61,8 @@ class AppRouter {
         path: AppRouteNames.productDetail,
         name: AppRouteNames.productDetail,
         builder: (context, state) {
-          // final extra = state.extra as ProductModel;
-          return Container();
+          final extra = state.extra as ProductModel;
+          return ProductDetailPage(product: extra);
         },
       ),
     ],

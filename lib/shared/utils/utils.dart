@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class Utils {
-  static double? parseCurrency(String text) {
+  static double? parseToDouble(String text) {
     return double.tryParse(text.replaceAll('.', '').replaceAll(',', '.'));
+  }
+
+  static String? parseToCurrency(double value) {
+    return CurrencyInputFormatter(
+          thousandSeparator: ThousandSeparator.Period,
+          mantissaLength: 2,
+        )
+        .formatEditUpdate(
+          TextEditingValue.empty,
+          TextEditingValue(text: value.toStringAsFixed(2)),
+        )
+        .text;
   }
 
   static Future<bool?> showDeleteDialog(BuildContext context) async {

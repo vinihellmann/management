@@ -20,7 +20,7 @@ class ProductRepository extends BaseRepository<ProductModel> {
   Future<List<ProductUnitModel>> getUnitsByProductId(int productId) async {
     try {
       final result = await db.rawQuery(
-        'SELECT * FROM ${AppTableNames.productUnits} WHERE product_id = ? ORDER BY name',
+        'SELECT * FROM ${AppTableNames.productUnits} WHERE productId = ? ORDER BY name',
         [productId],
       );
       return result.map(fromMapUnit).toList();
@@ -51,7 +51,7 @@ class ProductRepository extends BaseRepository<ProductModel> {
 
   Future<void> deleteUnitsByProductId(int productId) async {
     try {
-      await db.delete(AppTableNames.productUnits, productId, 'product_id');
+      await db.delete(AppTableNames.productUnits, productId, 'productId');
     } catch (e, stack) {
       throw AppException(
         'Erro ao deletar unidades do produto',

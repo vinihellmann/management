@@ -72,6 +72,7 @@ class ProductFormFields extends StatelessWidget {
                   spacing: 12,
                   children: [
                     AppTextField(
+                      isRequired: true,
                       label: 'Nome',
                       controller: entry.nameController,
                     ),
@@ -80,6 +81,7 @@ class ProductFormFields extends StatelessWidget {
                       children: [
                         Expanded(
                           child: AppTextField(
+                            isRequired: true,
                             label: 'Valor',
                             controller: entry.priceController,
                             inputFormatters: [InputFormatters.currencyMask],
@@ -91,6 +93,7 @@ class ProductFormFields extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: AppTextField(
+                            isRequired: true,
                             label: 'Estoque',
                             controller: entry.stockController,
                             inputFormatters: [InputFormatters.currencyMask],

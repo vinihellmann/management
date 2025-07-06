@@ -37,8 +37,12 @@ class ProductFormProvider
           return ProductUnitEntryModel(
             unit: u,
             nameController: TextEditingController(text: u.name),
-            priceController: TextEditingController(text: u.price!.toString()),
-            stockController: TextEditingController(text: u.stock!.toString()),
+            priceController: TextEditingController(
+              text: Utils.parseToCurrency(u.price!),
+            ),
+            stockController: TextEditingController(
+              text: Utils.parseToCurrency(u.stock!),
+            ),
           );
         }).toList();
       } else {
@@ -98,8 +102,8 @@ class ProductFormProvider
           id: entry.unit.id,
           code: entry.unit.code,
           name: entry.nameController.text.trim(),
-          price: Utils.parseCurrency(entry.priceController.text),
-          stock: Utils.parseCurrency(entry.stockController.text),
+          price: Utils.parseToDouble(entry.priceController.text),
+          stock: Utils.parseToDouble(entry.stockController.text),
           createdAt: entry.unit.createdAt,
         );
       }).toList();
