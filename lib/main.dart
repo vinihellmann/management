@@ -33,7 +33,7 @@ class ManagementApp extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return MaterialApp.router(
-      title: 'Management',
+      title: 'NexGestor',
       debugShowCheckedModeBanner: false,
       theme: themeNotifier.currentTheme,
       routerConfig: AppRouter.router,

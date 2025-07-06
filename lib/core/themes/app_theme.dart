@@ -15,6 +15,7 @@ class AppThemes {
         onPrimary: Colors.white,
         onSurface: AppColors.lightText,
       ),
+      dividerTheme: DividerThemeData(color: AppColors.lightInputBorder),
       textTheme: AppTextStyles.getTextTheme(AppColors.lightText),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.lightSurface,
@@ -93,6 +94,7 @@ class AppThemes {
         onPrimary: Colors.white,
         onSurface: AppColors.darkText,
       ),
+      dividerTheme: DividerThemeData(color: AppColors.darkInputBorder),
       textTheme: AppTextStyles.getTextTheme(AppColors.darkText),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.darkSurface,
