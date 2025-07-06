@@ -20,7 +20,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) =>
-          ProductDetailProvider(ctx.read())..loadUnits(product.id!),
+          ProductDetailProvider(ctx.read())..loadUnits(product.units),
       child: _ProductDetailView(product),
     );
   }

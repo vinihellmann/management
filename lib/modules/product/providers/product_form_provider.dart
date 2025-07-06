@@ -35,8 +35,7 @@ class ProductFormProvider
       barCodeController.text = model?.barCode ?? '';
 
       if (model?.id != null) {
-        final rawUnits = await repository.getUnitsByProductId(model!.id!);
-        unitEntries = rawUnits.map((u) {
+        unitEntries = model!.units.map((u) {
           return ProductUnitEntryModel(
             unit: u,
             nameController: TextEditingController(text: u.name),

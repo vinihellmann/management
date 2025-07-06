@@ -9,8 +9,8 @@ class ProductDetailProvider
 
   List<ProductUnitModel> units = [];
 
-  Future<void> loadUnits(int productId) async {
-    units = await repository.getUnitsByProductId(productId);
+  Future<void> loadUnits(List<ProductUnitModel> productUnits) async {
+    units = productUnits;
     notifyListeners();
   }
 }
