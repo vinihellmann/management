@@ -3,8 +3,7 @@ import 'package:management/core/components/app_drawer_controller.dart';
 import 'package:management/core/router/app_router.dart';
 import 'package:management/core/services/app_database_service.dart';
 import 'package:management/core/themes/theme_notifier.dart';
-import 'package:management/modules/dashboard/providers/dashboard_provider.dart';
-import 'package:management/shared/providers/repository_providers.dart';
+import 'package:management/shared/providers/global/global_providers.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -15,14 +14,7 @@ void main() async {
   runApp(
     AppDrawerController(
       child: MultiProvider(
-        providers: [
-          Provider<AppDatabaseService>.value(value: dbService),
-          ...RepositoryProviders.all,
-          ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-          ChangeNotifierProvider(
-            create: (ctx) => DashboardProvider(ctx.read())..loadData(),
-          ),
-        ],
+        providers: GlobalProviders.all(dbService),
         child: const ManagementApp(),
       ),
     ),

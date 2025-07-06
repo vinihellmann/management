@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
@@ -7,8 +8,11 @@ import 'package:management/modules/customer/pages/customer_list_page.dart';
 import 'package:management/modules/dashboard/pages/dashboard_page.dart';
 
 class AppRouter {
+  static final routerObserver = RouteObserver<PageRoute>();
+
   static final GoRouter router = GoRouter(
     initialLocation: AppRouteNames.dashboard,
+    observers: [routerObserver],
     routes: [
       GoRoute(
         path: AppRouteNames.dashboard,

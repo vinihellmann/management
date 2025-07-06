@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:management/core/components/app_detail_info_card.dart';
 import 'package:management/core/components/app_layout.dart';
 import 'package:management/core/components/app_section_description.dart';
+import 'package:management/core/router/app_router.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/core/themes/app_text_styles.dart';
 import 'package:management/modules/dashboard/providers/dashboard_provider.dart';
@@ -12,12 +13,48 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _DashboardView();
+    return ChangeNotifierProvider(
+      create: (ctx) => DashboardProvider(ctx.read()),
+      child: const _DashboardView(),
+    );
   }
 }
 
-class _DashboardView extends StatelessWidget {
+class _DashboardView extends StatefulWidget {
   const _DashboardView();
+
+  @override
+  State<_DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<_DashboardView> with RouteAware {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DashboardProvider>().loadData();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      AppRouter.routerObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    AppRouter.routerObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    context.read<DashboardProvider>().loadData();
+  }
 
   @override
   Widget build(BuildContext context) {
