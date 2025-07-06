@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/components/app_text_field.dart';
+import 'package:management/modules/product/components/product_form_unit_item.dart';
 import 'package:management/modules/product/providers/product_form_provider.dart';
-import 'package:management/shared/formatters/input_formatters.dart';
 import 'package:provider/provider.dart';
 
 class ProductFormFields extends StatelessWidget {
@@ -61,62 +61,20 @@ class ProductFormFields extends StatelessWidget {
               ),
             ],
           ),
-          ...provider.unitEntries.map((entry) {
-            final index = provider.unitEntries.indexOf(entry);
-            return Card(
-              elevation: 2,
-              margin: const EdgeInsets.all(0),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  spacing: 12,
-                  children: [
-                    AppTextField(
-                      isRequired: true,
-                      label: 'Nome',
-                      controller: entry.nameController,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: AppTextField(
-                            isRequired: true,
-                            label: 'Valor',
-                            controller: entry.priceController,
-                            inputFormatters: [InputFormatters.currencyMask],
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: AppTextField(
-                            isRequired: true,
-                            label: 'Estoque',
-                            controller: entry.stockController,
-                            inputFormatters: [InputFormatters.currencyMask],
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          tooltip: 'Remover unidade',
-                          onPressed: () => provider.removeUnit(index),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+          AnimatedList(
+            key: provider.unitListKey,
+            initialItemCount: provider.unitEntries.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index, animation) {
+              final entry = provider.unitEntries[index];
+              return ProductFormUnitItem(
+                animation: animation,
+                index: index,
+                entry: entry,
+              );
+            },
+          ),
         ],
       ),
     );

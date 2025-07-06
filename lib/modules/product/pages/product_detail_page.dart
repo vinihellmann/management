@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_detail_info_card.dart';
 import 'package:management/core/components/app_layout.dart';
+import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/product/models/product_model.dart';
@@ -18,8 +19,9 @@ class ProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ProductDetailProvider(context.read()),
-      child: _ProductDetailView(product: product),
+      create: (ctx) =>
+          ProductDetailProvider(ctx.read())..loadUnits(product.id!),
+      child: _ProductDetailView(product),
     );
   }
 }
@@ -27,7 +29,7 @@ class ProductDetailPage extends StatelessWidget {
 class _ProductDetailView extends StatelessWidget {
   final ProductModel product;
 
-  const _ProductDetailView({required this.product});
+  const _ProductDetailView(this.product);
 
   @override
   Widget build(BuildContext context) {
@@ -38,47 +40,64 @@ class _ProductDetailView extends StatelessWidget {
       title: 'Detalhes do Produto',
       body: SingleChildScrollView(
         padding: EdgeInsets.all(12),
-        child: Wrap(
-          spacing: 24,
-          runSpacing: 24,
-          alignment: WrapAlignment.center,
-          runAlignment: WrapAlignment.center,
+        child: Column(
+          spacing: 12,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppDetailInfoCard(
-              width: double.infinity,
-              title: 'Código',
-              value: product.code ?? '',
-              icon: Icons.qr_code,
-              color: AppColors.primary,
+            Wrap(
+              spacing: 24,
+              runSpacing: 24,
+              children: [
+                AppDetailInfoCard(
+                  width: double.infinity,
+                  title: 'Código',
+                  value: product.code ?? '',
+                  icon: Icons.qr_code,
+                  color: AppColors.primary,
+                ),
+                AppDetailInfoCard(
+                  width: double.infinity,
+                  title: 'Nome',
+                  value: product.name ?? '',
+                  icon: Icons.inventory_2,
+                  color: AppColors.primary,
+                ),
+                AppDetailInfoCard(
+                  width: double.infinity,
+                  title: 'Código de Barras',
+                  value: product.barCode ?? '',
+                  icon: Icons.qr_code_2,
+                  color: AppColors.primary,
+                ),
+                AppDetailInfoCard(
+                  width: double.infinity,
+                  title: 'Marca',
+                  value: product.brand ?? '',
+                  icon: Icons.flag,
+                  color: AppColors.primary,
+                ),
+                AppDetailInfoCard(
+                  width: double.infinity,
+                  title: 'Grupo',
+                  value: product.group ?? '',
+                  icon: Icons.category,
+                  color: AppColors.primary,
+                ),
+              ],
             ),
-            AppDetailInfoCard(
-              width: double.infinity,
-              title: 'Nome',
-              value: product.name ?? '',
-              icon: Icons.shopping_bag,
-              color: AppColors.primary,
-            ),
-            AppDetailInfoCard(
-              width: double.infinity,
-              title: 'Código de Barras',
-              value: product.barCode ?? '',
-              icon: Icons.qr_code_2,
-              color: AppColors.primary,
-            ),
-            AppDetailInfoCard(
-              width: double.infinity,
-              title: 'Marca',
-              value: product.brand ?? '',
-              icon: Icons.label,
-              color: AppColors.primary,
-            ),
-            AppDetailInfoCard(
-              width: double.infinity,
-              title: 'Grupo',
-              value: product.group ?? '',
-              icon: Icons.category,
-              color: AppColors.primary,
-            ),
+            if (provider.units.isNotEmpty) ...[
+              AppSectionDescription(description: 'Unidades'),
+              ...provider.units.map(
+                (u) => ListTile(
+                  leading: const Icon(Icons.widgets),
+                  title: Text(u.name!),
+                  subtitle: Text(
+                    'Valor: R\$ ${Utils.parseToCurrency(u.price!)}\nEstoque: ${Utils.parseToCurrency(u.stock!)}',
+                  ),
+                ),
+              ),
+              SizedBox(height: 120),
+            ],
           ],
         ),
       ),

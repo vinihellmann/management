@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_form_provider.dart';
 import 'package:management/core/services/app_toast_service.dart';
+import 'package:management/modules/product/components/product_form_unit_item.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/models/product_unit_entry_model.dart';
 import 'package:management/modules/product/models/product_unit_model.dart';
@@ -18,6 +19,8 @@ class ProductFormProvider
   final brandController = TextEditingController();
   final groupController = TextEditingController();
   final barCodeController = TextEditingController();
+
+  final unitListKey = GlobalKey<AnimatedListState>();
 
   List<ProductUnitEntryModel> unitEntries = [];
 
@@ -62,19 +65,31 @@ class ProductFormProvider
   }
 
   void addUnit() {
-    unitEntries.add(
-      ProductUnitEntryModel(
-        unit: ProductUnitModel(),
-        nameController: TextEditingController(),
-        priceController: TextEditingController(),
-        stockController: TextEditingController(),
-      ),
+    final entry = ProductUnitEntryModel(
+      unit: ProductUnitModel(),
+      nameController: TextEditingController(),
+      priceController: TextEditingController(),
+      stockController: TextEditingController(),
     );
+
+    unitEntries.add(entry);
+    unitListKey.currentState?.insertItem(unitEntries.length - 1);
     notifyListeners();
   }
 
   void removeUnit(int index) {
-    unitEntries.removeAt(index);
+    final removed = unitEntries.removeAt(index);
+    unitListKey.currentState?.removeItem(
+      index,
+      (context, animation) => SizeTransition(
+        sizeFactor: animation,
+        child: ProductFormUnitItem(
+          animation: animation,
+          index: index,
+          entry: removed,
+        ),
+      ),
+    );
     notifyListeners();
   }
 
