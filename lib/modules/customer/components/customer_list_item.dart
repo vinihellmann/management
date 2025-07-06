@@ -15,7 +15,10 @@ class CustomerListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(child: Text(customer.name![0].toUpperCase())),
-      title: Text('${customer.code} - ${customer.name}'),
+      title: Text(
+        '${customer.code} - ${customer.name}'.toUpperCase(),
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Text(customer.document!),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,

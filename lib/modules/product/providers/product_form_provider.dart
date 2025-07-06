@@ -95,6 +95,10 @@ class ProductFormProvider
   @override
   Future<bool?> save() async {
     if (!formKey.currentState!.validate()) return false;
+    if (unitEntries.isEmpty) {
+      AppToastService.showError('O produto precisa de pelo menos uma unidade');
+      return false;
+    }
 
     try {
       changeSaving();

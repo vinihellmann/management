@@ -96,21 +96,18 @@ class _ProductDetailView extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 120),
+              SizedBox(height: 140),
             ],
           ],
         ),
       ),
       floatingActionButton: Column(
-        spacing: 12,
+        spacing: 24,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           AppButton(
-            tooltip: 'Excluir',
-            icon: Icons.delete,
-            color: Theme.of(context).colorScheme.error,
-            type: AppButtonType.fab,
+            type: AppButtonType.remove,
             onPressed: () async {
               final confirmed = await Utils.showDeleteDialog(context);
 
@@ -121,11 +118,7 @@ class _ProductDetailView extends StatelessWidget {
             },
           ),
           AppButton(
-            tooltip: 'Editar',
-            icon: Icons.edit,
-            text: 'Editar',
-            color: AppColors.secondary,
-            type: AppButtonType.filled,
+            type: AppButtonType.edit,
             onPressed: () async {
               final result = await context.pushNamed(
                 AppRouteNames.productForm,

@@ -44,10 +44,7 @@ class _ProductFormView extends StatelessWidget {
       ),
       floatingActionButton: AppButton(
         isLoading: provider.isSaving,
-        type: AppButtonType.filled,
-        text: 'Salvar',
-        icon: Icons.check,
-        tooltip: 'Salvar',
+        type: AppButtonType.save,
         onPressed: () async {
           final result = await provider.save();
           if (result == true && context.mounted) context.pop(true);

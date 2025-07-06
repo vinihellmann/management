@@ -98,7 +98,7 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
                   title: 'A receber',
                   value: 'R\$ 5.420,00',
                   icon: Icons.payment,
-                  color: Colors.orange,
+                  color: AppColors.warning,
                 ),
                 AppDetailInfoCard(
                   width: 160,

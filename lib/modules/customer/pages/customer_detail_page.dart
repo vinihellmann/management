@@ -97,15 +97,12 @@ class _CustomerDetailView extends StatelessWidget {
         ),
       ),
       floatingActionButton: Column(
-        spacing: 12,
+        spacing: 24,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           AppButton(
-            tooltip: 'Deletar',
-            icon: Icons.delete,
-            color: Theme.of(context).colorScheme.error,
-            type: AppButtonType.fab,
+            type: AppButtonType.remove,
             onPressed: () async {
               final confirmed = await Utils.showDeleteDialog(context);
 
@@ -116,11 +113,7 @@ class _CustomerDetailView extends StatelessWidget {
             },
           ),
           AppButton(
-            tooltip: 'Editar',
-            icon: Icons.edit,
-            text: 'Editar',
-            color: AppColors.secondary,
-            type: AppButtonType.filled,
+            type: AppButtonType.edit,
             onPressed: () async {
               final result = await context.push<bool>(
                 AppRouteNames.customerForm,

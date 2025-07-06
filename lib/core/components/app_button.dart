@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:management/core/components/app_loader.dart';
 import 'package:management/core/themes/app_colors.dart';
 
-enum AppButtonType { filled, outline, text, fab }
+enum AppButtonType { filled, outline, text, fab, save, edit, remove }
 
 class AppButton extends StatefulWidget {
   final String? text;
@@ -94,10 +94,38 @@ class _AppButtonState extends State<AppButton> {
 
       case AppButtonType.fab:
         return FloatingActionButton(
+          heroTag: null,
           tooltip: widget.tooltip,
           backgroundColor: widget.color,
           onPressed: _handlePress,
           child: Icon(widget.icon),
+        );
+
+      case AppButtonType.save:
+        return FloatingActionButton(
+          heroTag: null,
+          tooltip: 'Salvar',
+          backgroundColor: AppColors.secondary,
+          onPressed: _handlePress,
+          child: Icon(Icons.done),
+        );
+
+      case AppButtonType.edit:
+        return FloatingActionButton(
+          heroTag: null,
+          tooltip: 'Editar',
+          backgroundColor: AppColors.warning,
+          onPressed: _handlePress,
+          child: Icon(Icons.edit),
+        );
+
+      case AppButtonType.remove:
+        return FloatingActionButton(
+          heroTag: null,
+          tooltip: 'Remover',
+          backgroundColor: Theme.of(context).colorScheme.error,
+          onPressed: _handlePress,
+          child: Icon(Icons.delete),
         );
     }
   }
