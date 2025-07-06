@@ -10,6 +10,7 @@ import 'package:management/core/themes/app_text_styles.dart';
 import 'package:management/modules/customer/components/customer_list_item.dart';
 import 'package:management/modules/customer/providers/customer_list_provider.dart';
 import 'package:management/modules/customer/repositories/customer_repository.dart';
+import 'package:management/modules/dashboard/providers/dashboard_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomerListPage extends StatelessWidget {
@@ -60,6 +61,7 @@ class _CustomerListView extends StatelessWidget {
 
                     if (result == true && context.mounted) {
                       provider.getData();
+                      context.read<DashboardProvider>().loadData();
                     }
                   },
                 ),
@@ -97,6 +99,7 @@ class _CustomerListView extends StatelessWidget {
 
                             if (result == true && context.mounted) {
                               provider.getData();
+                              context.read<DashboardProvider>().loadData();
                             }
                           },
                         );
