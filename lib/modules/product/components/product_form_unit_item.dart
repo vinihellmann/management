@@ -3,6 +3,7 @@ import 'package:management/core/components/app_text_field.dart';
 import 'package:management/modules/product/models/product_unit_entry_model.dart';
 import 'package:management/modules/product/providers/product_form_provider.dart';
 import 'package:management/shared/formatters/input_formatters.dart';
+import 'package:management/shared/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class ProductFormUnitItem extends StatelessWidget {
@@ -30,6 +31,33 @@ class ProductFormUnitItem extends StatelessWidget {
           child: Column(
             spacing: 12,
             children: [
+              Row(
+                children: [
+                  Text(
+                    'Unidade ${index + 1}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    tooltip: 'Remover unidade',
+                    onPressed: () => _showDeleteDialog(context),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      entry.unit.isDefault ? Icons.star : Icons.star_border,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    tooltip: 'Marcar como padrão',
+                    onPressed: () {
+                      provider.setDefaultUnitByEntry(entry);
+                    },
+                  ),
+                ],
+              ),
               AppTextField(
                 isRequired: true,
                 label: 'Nome',
@@ -57,14 +85,6 @@ class ProductFormUnitItem extends StatelessWidget {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    tooltip: 'Remover unidade',
-                    onPressed: () => provider.removeUnit(index),
-                  ),
                 ],
               ),
             ],
@@ -72,5 +92,11 @@ class ProductFormUnitItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showDeleteDialog(BuildContext context) async {
+    final provider = context.read<ProductFormProvider>();
+    final result = await Utils.showDeleteDialog(context);
+    if (result == true) provider.removeUnit(index);
   }
 }

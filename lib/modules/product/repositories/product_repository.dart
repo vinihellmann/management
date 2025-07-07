@@ -67,7 +67,7 @@ class ProductRepository extends BaseRepository<ProductModel> {
   Future<List<ProductUnitModel>> getUnitsByProductId(int productId) async {
     try {
       final result = await db.rawQuery(
-        'SELECT * FROM ${AppTableNames.productUnits} WHERE productId = ? ORDER BY name',
+        'SELECT * FROM ${AppTableNames.productUnits} WHERE productId = ? ORDER BY isDefault DESC, id ASC',
         [productId],
       );
       return result.map(fromMapUnit).toList();

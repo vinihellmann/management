@@ -65,7 +65,7 @@ class ProductFormProvider
 
   void addUnit() {
     final entry = ProductUnitEntryModel(
-      unit: ProductUnitModel(),
+      unit: ProductUnitModel(isDefault: unitEntries.isEmpty),
       nameController: TextEditingController(),
       priceController: TextEditingController(),
       stockController: TextEditingController(),
@@ -89,6 +89,14 @@ class ProductFormProvider
         ),
       ),
     );
+    notifyListeners();
+  }
+
+  void setDefaultUnitByEntry(ProductUnitEntryModel selectedEntry) {
+    for (final entry in unitEntries) {
+      entry.unit.isDefault = entry == selectedEntry;
+    }
+
     notifyListeners();
   }
 
@@ -122,6 +130,7 @@ class ProductFormProvider
           name: entry.nameController.text.trim(),
           price: Utils.parseToDouble(entry.priceController.text),
           stock: Utils.parseToDouble(entry.stockController.text),
+          isDefault: entry.unit.isDefault,
           createdAt: entry.unit.createdAt,
         );
       }).toList();
