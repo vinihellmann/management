@@ -4,6 +4,8 @@ import 'package:management/core/models/base_repository.dart';
 import 'package:management/core/models/paginated_result.dart';
 import 'package:management/core/services/app_database_service.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
+import 'package:management/modules/product/models/product_model.dart';
+import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -19,9 +21,17 @@ class SaleRepository extends BaseRepository<SaleModel> {
   SaleItemModel fromItemMap(Map<String, dynamic> map) {
     return SaleItemModel().fromMap(map);
   }
-  
+
   CustomerModel fromCustomerMap(Map<String, dynamic> map) {
     return CustomerModel().fromMap(map);
+  }
+
+  ProductModel fromProductMap(Map<String, dynamic> map) {
+    return ProductModel().fromMap(map);
+  }
+
+  ProductUnitModel fromUnitMap(Map<String, dynamic> map) {
+    return ProductUnitModel().fromMap(map);
   }
 
   @override
@@ -92,6 +102,29 @@ class SaleRepository extends BaseRepository<SaleModel> {
         [customerId],
       );
       return fromCustomerMap(result.first);
+    } catch (e, stack) {
+      throw AppException(
+        'Erro ao buscar itens da venda',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
+  }
+
+  Future<ProductModel> getProductById(int id) async {
+    try {
+      final resultProd = await db.rawQuery(
+        'SELECT * FROM ${AppTableNames.products} WHERE id = ?',
+        [id],
+      );
+      final product = fromProductMap(resultProd.first);
+
+      final resultUnit = await db.rawQuery(
+        'SELECT * FROM ${AppTableNames.productUnits} WHERE productId = ? ORDER BY isDefault DESC, id ASC',
+        [id],
+      );
+      product.units = resultUnit.map((u) => fromUnitMap(u)).toList();
+      return product;
     } catch (e, stack) {
       throw AppException(
         'Erro ao buscar itens da venda',

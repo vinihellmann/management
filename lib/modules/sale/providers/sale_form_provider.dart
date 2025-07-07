@@ -111,6 +111,15 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
     notifyListeners();
   }
 
+  void updateItem(SaleItemModel item) {
+    final index = items.indexWhere((i) => i.productId == item.productId);
+    if (index != -1) {
+      items[index] = item;
+      _recalculateTotals();
+      notifyListeners();
+    }
+  }
+
   void _recalculateTotals() {
     final discount = double.tryParse(discountValueController.text) ?? 0;
     final total = totalProducts - discount;

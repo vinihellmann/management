@@ -12,6 +12,7 @@ import 'package:management/modules/product/pages/product_detail_page.dart';
 import 'package:management/modules/product/pages/product_form_page.dart';
 import 'package:management/modules/product/pages/product_list_page.dart';
 import 'package:management/modules/product/pages/product_select_page.dart';
+import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/pages/sale_detail_page.dart';
 import 'package:management/modules/sale/pages/sale_form_edit_item_page.dart';
@@ -107,8 +108,13 @@ class AppRouter {
         path: AppRouteNames.saleFormEditItem,
         name: AppRouteNames.saleFormEditItem,
         builder: (context, state) {
-          final extra = state.extra as ProductModel;
-          return SaleFormEditItemPage(product: extra);
+          final extra = state.extra;
+
+          if (extra is ProductModel) {
+            return SaleFormEditItemPage(product: extra);
+          } else {
+            return SaleFormEditItemPage(saleItem: extra as SaleItemModel);
+          }
         },
       ),
     ],

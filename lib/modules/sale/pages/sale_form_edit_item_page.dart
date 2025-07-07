@@ -6,9 +6,10 @@ import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 
 class SaleFormEditItemPage extends StatefulWidget {
-  final ProductModel product;
+  final ProductModel? product;
+  final SaleItemModel? saleItem;
 
-  const SaleFormEditItemPage({super.key, required this.product});
+  const SaleFormEditItemPage({super.key, this.product, this.saleItem});
 
   @override
   State<SaleFormEditItemPage> createState() => _SaleFormEditItemPageState();
@@ -17,30 +18,69 @@ class SaleFormEditItemPage extends StatefulWidget {
 class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
   late TextEditingController priceController;
   late TextEditingController quantityController;
+  late int currentUnitIndex;
+
+  List get units => widget.product?.units ?? [];
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.saleItem != null && units.isNotEmpty) {
+      final index = units.indexWhere((u) => u.id == widget.saleItem!.unitId);
+      currentUnitIndex = index != -1 ? index : 0;
+    } else {
+      currentUnitIndex = 0;
+    }
+
+    final initialPrice =
+        widget.saleItem?.unitPrice ?? units[currentUnitIndex].price ?? 0.0;
+    final initialQuantity = widget.saleItem?.quantity ?? 1.0;
+
     priceController = TextEditingController(
-      text: widget.product.units.first.price?.toStringAsFixed(2) ?? '0.00',
+      text: initialPrice.toStringAsFixed(2),
     );
-    quantityController = TextEditingController(text: '1');
+    quantityController = TextEditingController(
+      text: initialQuantity.toString(),
+    );
+  }
+
+  void nextUnit() {
+    if (units.isEmpty) return;
+    setState(() {
+      currentUnitIndex = (currentUnitIndex + 1) % units.length;
+      priceController.text =
+          units[currentUnitIndex].price?.toStringAsFixed(2) ?? '0.00';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final unit = widget.product.units.first;
+    final currentUnit = units.isNotEmpty ? units[currentUnitIndex] : null;
 
     return AppLayout(
-      title: 'Adicionar Produto',
+      title: widget.saleItem != null ? 'Editar Item' : 'Adicionar Produto',
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Text(
-              widget.product.name ?? '',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text(name, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+            if (currentUnit != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Unidade: ${currentUnit.name}',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  IconButton(
+                    onPressed: nextUnit,
+                    icon: const Icon(Icons.swap_horiz),
+                    tooltip: 'Alterar unidade',
+                  ),
+                ],
+              ),
             const SizedBox(height: 16),
             TextFormField(
               controller: priceController,
@@ -63,11 +103,14 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
                 final quantity = double.tryParse(quantityController.text) ?? 0;
                 final subtotal = price * quantity;
 
+                final unit = currentUnit;
+
                 final item = SaleItemModel(
-                  productId: widget.product.id,
-                  productName: widget.product.name,
-                  unitId: unit.id,
-                  unitName: unit.name,
+                  id: widget.saleItem?.id,
+                  productId: productId,
+                  productName: name,
+                  unitId: unit?.id,
+                  unitName: unit?.name,
                   unitPrice: price,
                   quantity: quantity,
                   subtotal: subtotal,
@@ -81,6 +124,10 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
       ),
     );
   }
+
+  String get name => widget.saleItem?.productName ?? widget.product?.name ?? '';
+
+  int? get productId => widget.saleItem?.productId ?? widget.product?.id;
 
   @override
   void dispose() {
