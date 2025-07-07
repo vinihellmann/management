@@ -5,6 +5,8 @@ import 'package:management/core/database/migrations/migration_0001_create_custom
 import 'package:management/core/database/migrations/migration_0002_create_state_city_table.dart';
 import 'package:management/core/database/migrations/migration_0003_create_products_table.dart';
 import 'package:management/core/database/migrations/migration_0004_create_product_units_table.dart';
+import 'package:management/core/database/migrations/migration_0005_create_sales_table.dart';
+import 'package:management/core/database/migrations/migration_0006_create_sale_items_table.dart';
 import 'package:management/core/models/base_migration.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,7 +17,7 @@ class AppDatabase {
   AppDatabase._internal();
 
   static const _dbName = 'management.db';
-  static const _dbVersion = 2;
+  static const _dbVersion = 1;
 
   Database? _database;
 
@@ -61,6 +63,8 @@ class AppDatabase {
       Migration0002CreateStateCityTable(),
       Migration0003CreateProductsTable(),
       Migration0004CreateProductUnitsTable(),
+      Migration0005CreateSalesTable(),
+      Migration0006CreateSaleItemsTable(),
     ];
 
     for (final migration in allMigrations) {

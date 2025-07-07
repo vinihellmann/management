@@ -56,6 +56,7 @@ class ProductFormFields extends StatelessWidget {
               AppButton(
                 icon: Icons.add,
                 text: 'Adicionar',
+                tooltip: 'Adicionar unidade',
                 type: AppButtonType.text,
                 onPressed: () async => provider.addUnit(),
               ),
