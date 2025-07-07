@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_document_text_field.dart';
+import 'package:management/core/components/app_loader.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/components/app_select.dart';
 import 'package:management/core/components/app_text_field.dart';
@@ -63,11 +64,15 @@ class CustomerFormFields extends StatelessWidget {
         AppTextField(
           label: 'CEP',
           isRequired: true,
-          icon: Icons.search,
           controller: provider.zipController,
           keyboardType: TextInputType.number,
           inputFormatters: [InputFormatters.zipMask],
-          onIconPress: () => provider.fillAddress(),
+          suffixIcon: provider.isSearching
+              ? AppLoader(padding: EdgeInsets.all(16), strokeWidth: 2)
+              : IconButton(
+                  onPressed: () => provider.fillAddress(),
+                  icon: Icon(Icons.search),
+                ),
         ),
         AppSelect<CustomerStateModel>(
           isRequired: true,

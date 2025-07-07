@@ -15,8 +15,7 @@ class AppTextField extends StatelessWidget {
   final bool enabled;
   final String? initialValue;
   final List<TextInputFormatter>? inputFormatters;
-  final IconData? icon;
-  final VoidCallback? onIconPress;
+  final Widget? suffixIcon;
 
   const AppTextField({
     super.key,
@@ -32,8 +31,7 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.initialValue,
     this.inputFormatters,
-    this.icon,
-    this.onIconPress,
+    this.suffixIcon,
   });
 
   String? _isRequired(String? value) {
@@ -61,12 +59,7 @@ class AppTextField extends StatelessWidget {
           style: AppTextStyles.input.copyWith(
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          decoration: InputDecoration(
-            hintText: hint,
-            suffixIcon: icon != null
-                ? IconButton(icon: Icon(icon), onPressed: onIconPress)
-                : null,
-          ),
+          decoration: InputDecoration(hintText: hint, suffixIcon: suffixIcon),
         ),
       ],
     );

@@ -32,6 +32,8 @@ class CustomerFormProvider
   CustomerStateModel? selectedState;
   CustomerCityModel? selectedCity;
 
+  bool isSearching = false;
+
   CustomerFormProvider(super.repository, this.zipService);
 
   Future<void> fillAddress() async {
@@ -48,6 +50,9 @@ class CustomerFormProvider
         AppToastService.showError('Formato de CEP inválido');
         return;
       }
+
+      isSearching = true;
+      notifyListeners();
 
       final zip = await zipService.fetchZipCode(cleanZipCode);
 
@@ -72,6 +77,9 @@ class CustomerFormProvider
     } catch (e) {
       log("[CustomerFormProvider]::fillAddress - $e");
       AppToastService.showError('Erro desconhecido ao buscar o CEP');
+    } finally {
+      isSearching = false;
+      notifyListeners();
     }
   }
 

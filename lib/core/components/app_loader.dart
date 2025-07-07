@@ -4,12 +4,14 @@ class AppLoader extends StatelessWidget {
   final double size;
   final double strokeWidth;
   final Color? color;
+  final EdgeInsets? padding;
 
   const AppLoader({
     super.key,
     this.size = 24.0,
     this.strokeWidth = 3.0,
     this.color,
+    this.padding,
   });
 
   @override
@@ -21,7 +23,8 @@ class AppLoader extends StatelessWidget {
             ? theme.colorScheme.onSurface
             : theme.colorScheme.primary);
 
-    return SizedBox(
+    return Container(
+      padding: padding,
       height: size,
       width: size,
       child: CircularProgressIndicator(
