@@ -3,8 +3,8 @@ import 'package:management/core/models/base_model.dart';
 class SaleItemModel extends BaseModel {
   int? saleId;
   int? productId;
-  int? productUnitId;
   String? productName;
+  int? unitId;
   String? unitName;
   double? quantity;
   double? unitPrice;
@@ -17,8 +17,8 @@ class SaleItemModel extends BaseModel {
     super.updatedAt,
     this.saleId,
     this.productId,
-    this.productUnitId,
     this.productName,
+    this.unitId,
     this.unitName,
     this.quantity,
     this.unitPrice,
@@ -34,8 +34,8 @@ class SaleItemModel extends BaseModel {
       'updatedAt': updatedAt?.toIso8601String(),
       'saleId': saleId,
       'productId': productId,
-      'productUnitId': productUnitId,
       'productName': productName,
+      'unitId': unitId,
       'unitName': unitName,
       'quantity': quantity,
       'unitPrice': unitPrice,
@@ -52,8 +52,8 @@ class SaleItemModel extends BaseModel {
       updatedAt: DateTime.parse(map['updatedAt']),
       saleId: map['saleId'] as int?,
       productId: map['productId'] as int?,
-      productUnitId: map['productUnitId'] as int?,
       productName: map['productName'] as String?,
+      unitId: map['unitId'] as int?,
       unitName: map['unitName'] as String?,
       quantity: (map['quantity'] as num?)?.toDouble(),
       unitPrice: (map['unitPrice'] as num?)?.toDouble(),

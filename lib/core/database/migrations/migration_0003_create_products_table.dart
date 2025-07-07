@@ -17,8 +17,8 @@ class Migration0003CreateProductsTable implements BaseMigration {
         brand TEXT,
         "group" TEXT,
         description TEXT,
-        createdAt TEXT,
-        updatedAt TEXT
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL
       )
     ''');
   }

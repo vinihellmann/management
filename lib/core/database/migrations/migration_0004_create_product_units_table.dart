@@ -17,8 +17,8 @@ class Migration0004CreateProductUnitsTable implements BaseMigration {
         price REAL NOT NULL,
         stock REAL NOT NULL,
         isDefault INTEGER NOT NULL DEFAULT 0,
-        createdAt TEXT,
-        updatedAt TEXT,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL,
         FOREIGN KEY (productId) REFERENCES ${AppTableNames.products}(id) ON DELETE CASCADE
       )
     ''');

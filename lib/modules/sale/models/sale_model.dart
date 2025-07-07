@@ -11,6 +11,7 @@ class SaleModel extends BaseModel {
   double? discountPercentage;
   double? totalProducts;
   double? totalSale;
+  String? notes;
   SaleStatusEnum status;
 
   List<SaleItemModel> items;
@@ -28,6 +29,7 @@ class SaleModel extends BaseModel {
     this.discountPercentage,
     this.totalProducts,
     this.totalSale,
+    this.notes,
     this.status = SaleStatusEnum.open,
     this.items = const [],
   });
@@ -47,6 +49,7 @@ class SaleModel extends BaseModel {
       'discountPercentage': discountPercentage,
       'totalProducts': totalProducts,
       'totalSale': totalSale,
+      'notes': notes,
       'status': status.name,
     };
   }
@@ -66,6 +69,7 @@ class SaleModel extends BaseModel {
       discountPercentage: (map['discountPercentage'] as num?)?.toDouble(),
       totalProducts: (map['totalProducts'] as num?)?.toDouble(),
       totalSale: (map['totalSale'] as num?)?.toDouble(),
+      notes: map['notes'] as String?,
       status: SaleStatusEnum.values.firstWhere(
         (e) => e.name == map['status'],
         orElse: () => SaleStatusEnum.open,

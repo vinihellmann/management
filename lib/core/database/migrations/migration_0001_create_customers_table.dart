@@ -14,19 +14,19 @@ class Migration0001CreateCustomersTable implements BaseMigration {
         code TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
         fantasy TEXT,
-        document TEXT,
+        document TEXT NOT NULL,
         email TEXT,
         phone TEXT,
-        address TEXT,
-        neighborhood TEXT,
-        number TEXT,
-        city TEXT,
-        state TEXT,
+        address TEXT NOT NULL,
+        neighborhood TEXT NOT NULL,
+        number TEXT NOT NULL,
+        city TEXT NOT NULL,
+        state TEXT NOT NULL,
         contact TEXT,
-        zipcode TEXT,
+        zipcode TEXT NOT NULL,
         complement TEXT,
-        createdAt TEXT,
-        updatedAt TEXT
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL
       )
     ''');
   }

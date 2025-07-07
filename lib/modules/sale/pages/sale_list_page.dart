@@ -6,46 +6,41 @@ import 'package:management/core/components/app_loader.dart';
 import 'package:management/core/components/app_pagination.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/core/constants/app_route_names.dart';
-import 'package:management/modules/product/components/product_list_item.dart';
-import 'package:management/modules/product/models/product_model.dart';
-import 'package:management/modules/product/providers/product_list_provider.dart';
-import 'package:management/modules/product/repositories/product_repository.dart';
+import 'package:management/modules/sale/components/sale_list_item.dart';
+import 'package:management/modules/sale/providers/sale_list_provider.dart';
+import 'package:management/modules/sale/repositories/sale_repository.dart';
 import 'package:provider/provider.dart';
 
-class ProductListPage extends StatelessWidget {
-  final void Function(ProductModel)? onSelect;
-
-  const ProductListPage({super.key, this.onSelect});
+class SaleListPage extends StatelessWidget {
+  const SaleListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
-          ProductListProvider(context.read<ProductRepository>())..getData(),
-      child: _ProductListView(onSelect),
+          SaleListProvider(context.read<SaleRepository>())..getData(),
+      child: const _SaleListView(),
     );
   }
 }
 
-class _ProductListView extends StatelessWidget {
-  final void Function(ProductModel)? onSelect;
-
-  const _ProductListView(this.onSelect);
+class _SaleListView extends StatelessWidget {
+  const _SaleListView();
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<ProductListProvider>();
-    final products = provider.items;
+    final provider = context.watch<SaleListProvider>();
+    final sales = provider.items;
 
     return AppLayout(
-      title: 'Produtos',
+      title: 'Vendas',
       body: Column(
         children: [
           AppListHeader(
             totalItems: provider.totalItems,
             totalItemsShown: provider.totalItemsShown,
             onAdd: () async {
-              final result = await context.pushNamed(AppRouteNames.productForm);
+              final result = await context.pushNamed(AppRouteNames.saleForm);
               if (result == true && context.mounted) provider.getData();
             },
             onClearFilter: () async {
@@ -66,8 +61,8 @@ class _ProductListView extends StatelessWidget {
                     child: Text('Código (1-9)'),
                   ),
                   DropdownMenuItem(
-                    value: 'name ASC',
-                    child: Text('Nome (A-Z)'),
+                    value: 'customerName ASC',
+                    child: Text('Nome do Cliente (A-Z)'),
                   ),
                 ],
                 onChanged: (value) {
@@ -80,28 +75,13 @@ class _ProductListView extends StatelessWidget {
                 initialValue: provider.filters.code,
                 onChanged: (v) => provider.updateFilter('code', v),
               ),
-              AppTextField(
-                label: 'Nome',
-                initialValue: provider.filters.name,
-                onChanged: (v) => provider.updateFilter('name', v),
-              ),
-              AppTextField(
-                label: 'Marca',
-                initialValue: provider.filters.brand,
-                onChanged: (v) => provider.updateFilter('brand', v),
-              ),
-              AppTextField(
-                label: 'Grupo',
-                initialValue: provider.filters.group,
-                onChanged: (v) => provider.updateFilter('group', v),
-              ),
             ],
           ),
           if (provider.isLoading)
             const Expanded(child: Center(child: AppLoader()))
-          else if (products.isEmpty)
+          else if (sales.isEmpty)
             const Expanded(
-              child: Center(child: Text('Nenhum produto encontrado')),
+              child: Center(child: Text('Nenhuma venda encontrada')),
             )
           else
             Expanded(
@@ -109,22 +89,17 @@ class _ProductListView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ListView.separated(
-                      itemCount: products.length,
+                      itemCount: sales.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       itemBuilder: (_, index) {
-                        final product = products[index];
-                        return ProductListItem(
-                          product: product,
+                        final sale = sales[index];
+                        return SaleListItem(
+                          sale: sale,
                           onTap: () async {
-                            if (onSelect != null) {
-                              onSelect?.call(product);
-                              return;
-                            }
-
                             final result = await context.pushNamed(
-                              AppRouteNames.productDetail,
-                              extra: product,
+                              AppRouteNames.saleDetail,
+                              extra: sale,
                             );
                             if (result == true && context.mounted) {
                               provider.getData();

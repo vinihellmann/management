@@ -94,7 +94,7 @@ class _ProductListItemState extends State<ProductListItem> {
                       ),
                       Expanded(
                         child: Text(
-                          'Preço: R\$ ${Utils.parseToCurrency(currentUnit.price!)}',
+                          'Preço: R\$${Utils.parseToCurrency(currentUnit.price!)}',
                           textAlign: TextAlign.end,
                         ),
                       ),

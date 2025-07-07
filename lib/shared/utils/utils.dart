@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
+  static String? dateToPtBr(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
   static double? parseToDouble(String text) {
     return double.tryParse(text.replaceAll('.', '').replaceAll(',', '.'));
   }

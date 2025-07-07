@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/components/app_container_card.dart';
 import 'package:management/core/themes/app_text_styles.dart';
 
 class AppDetailInfoCard extends StatelessWidget {
@@ -14,27 +15,15 @@ class AppDetailInfoCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
-    this.width
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return AppContainerCard(
       width: width,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withAlpha(25),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -48,7 +48,7 @@ class _CustomerDetailView extends StatelessWidget {
               width: double.infinity,
               title: 'Código',
               value: c.code ?? '',
-              icon: Icons.qr_code,
+              icon: Icons.confirmation_number,
               color: AppColors.primary,
             ),
             AppDetailInfoCard(

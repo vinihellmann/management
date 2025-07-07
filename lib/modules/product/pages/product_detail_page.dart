@@ -52,7 +52,7 @@ class _ProductDetailView extends StatelessWidget {
                   width: double.infinity,
                   title: 'Código',
                   value: product.code ?? '',
-                  icon: Icons.qr_code,
+                  icon: Icons.confirmation_number,
                   color: AppColors.primary,
                 ),
                 AppDetailInfoCard(

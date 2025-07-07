@@ -73,35 +73,28 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
               alignment: Alignment.centerLeft,
               child: AppSectionDescription(description: 'Visão geral'),
             ),
-            Wrap(
+            Column(
               spacing: 24,
-              runSpacing: 24,
-              alignment: WrapAlignment.center,
-              runAlignment: WrapAlignment.center,
               children: [
                 AppDetailInfoCard(
-                  width: 160,
                   title: 'Clientes',
                   value: '${provider.totalCustomers}',
                   icon: Icons.people,
                   color: AppColors.primary,
                 ),
                 AppDetailInfoCard(
-                  width: 160,
                   title: 'Vendas do mês',
                   value: 'R\$ 12.560,00',
                   icon: Icons.attach_money,
                   color: AppColors.secondary,
                 ),
                 AppDetailInfoCard(
-                  width: 160,
                   title: 'A receber',
                   value: 'R\$ 5.420,00',
                   icon: Icons.payment,
                   color: AppColors.warning,
                 ),
                 AppDetailInfoCard(
-                  width: 160,
                   title: 'Ordens em aberto',
                   value: '8',
                   icon: Icons.build,

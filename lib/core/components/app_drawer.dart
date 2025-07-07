@@ -42,6 +42,12 @@ class AppDrawer extends StatelessWidget {
                 AppRouteNames.products,
                 currentRoute,
               ),
+              _DrawerItem(
+                'Vendas',
+                Icons.shopping_bag,
+                AppRouteNames.sales,
+                currentRoute,
+              ),
             ],
           ),
         ),

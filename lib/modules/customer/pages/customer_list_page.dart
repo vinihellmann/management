@@ -7,25 +7,30 @@ import 'package:management/core/components/app_pagination.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/modules/customer/components/customer_list_item.dart';
+import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/providers/customer_list_provider.dart';
 import 'package:management/modules/customer/repositories/customer_repository.dart';
 import 'package:provider/provider.dart';
 
 class CustomerListPage extends StatelessWidget {
-  const CustomerListPage({super.key});
+  final void Function(CustomerModel)? onSelect;
+
+  const CustomerListPage({super.key, this.onSelect});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
           CustomerListProvider(context.read<CustomerRepository>())..getData(),
-      child: const _CustomerListView(),
+      child: _CustomerListView(onSelect),
     );
   }
 }
 
 class _CustomerListView extends StatelessWidget {
-  const _CustomerListView();
+  final Function(CustomerModel)? onSelect;
+
+  const _CustomerListView(this.onSelect);
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +114,11 @@ class _CustomerListView extends StatelessWidget {
                         return CustomerListItem(
                           customer: c,
                           onTap: () async {
+                            if (onSelect != null) {
+                              onSelect?.call(c);
+                              return;
+                            }
+
                             final result = await context.pushNamed(
                               AppRouteNames.customerDetail,
                               extra: c,

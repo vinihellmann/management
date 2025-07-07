@@ -3,6 +3,7 @@ import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_repository.dart';
 import 'package:management/core/models/paginated_result.dart';
 import 'package:management/core/services/app_database_service.dart';
+import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,6 +18,10 @@ class SaleRepository extends BaseRepository<SaleModel> {
 
   SaleItemModel fromItemMap(Map<String, dynamic> map) {
     return SaleItemModel().fromMap(map);
+  }
+  
+  CustomerModel fromCustomerMap(Map<String, dynamic> map) {
+    return CustomerModel().fromMap(map);
   }
 
   @override
@@ -71,6 +76,22 @@ class SaleRepository extends BaseRepository<SaleModel> {
         [saleId],
       );
       return result.map(fromItemMap).toList();
+    } catch (e, stack) {
+      throw AppException(
+        'Erro ao buscar itens da venda',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
+  }
+
+  Future<CustomerModel> getSaleCustomerById(int customerId) async {
+    try {
+      final result = await db.rawQuery(
+        'SELECT * FROM ${AppTableNames.customers} WHERE id = ? ORDER BY id ASC',
+        [customerId],
+      );
+      return fromCustomerMap(result.first);
     } catch (e, stack) {
       throw AppException(
         'Erro ao buscar itens da venda',

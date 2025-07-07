@@ -12,17 +12,18 @@ class Migration0005CreateSalesTable implements BaseMigration {
       CREATE TABLE ${AppTableNames.sales} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT NOT NULL UNIQUE,
-        customerId INTEGER,
-        customerName TEXT,
-        paymentMethod TEXT,
-        paymentCondition TEXT,
+        customerId INTEGER NOT NULL,
+        customerName TEXT NOT NULL,
+        paymentMethod TEXT NOT NULL,
+        paymentCondition TEXT NOT NULL,
         discountPercentage REAL,
         discountValue REAL,
-        totalProducts REAL,
-        total REAL,
-        status TEXT,
-        createdAt TEXT,
-        updatedAt TEXT,
+        totalProducts REAL NOT NULL,
+        totalSale REAL NOT NULL,
+        notes TEXT,
+        status TEXT NOT NULL,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL,
         FOREIGN KEY (customerId) REFERENCES ${AppTableNames.customers}(id) ON DELETE SET NULL
       )
     ''');

@@ -143,7 +143,7 @@ class ProductFormProvider
         await repository.insertUnits(productId, units);
       }
 
-      AppToastService.showSuccess('Produto salvo com sucesso');
+      AppToastService.showSuccess('Registro salvo com sucesso');
       return true;
     } on AppException catch (e) {
       log("[ProductFormProvider]::save - ${e.message} - ${e.detail}");
