@@ -26,10 +26,10 @@ class AppPagination extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(64),
           boxShadow: const [
             BoxShadow(
               color: Colors.black12,
@@ -49,9 +49,7 @@ class AppPagination extends StatelessWidget {
             ),
             Text(
               'Página $currentPage de $totalPages',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.bodyMedium,
             ),
             AppButton(
               type: AppButtonType.outline,

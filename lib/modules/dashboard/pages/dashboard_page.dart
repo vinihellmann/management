@@ -81,13 +81,13 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
                 ),
                 SummaryCard(
                   title: 'Vendas do mês',
-                  value: 'R\$${Utils.parseToCurrency(provider.salesThisMonth)}',
+                  value: 'R\$ ${Utils.parseToCurrency(provider.salesThisMonth)}',
                   icon: Icons.attach_money,
                   color: AppColors.secondary,
                 ),
                 SummaryCard(
                   title: 'A receber',
-                  value: 'R\$${Utils.parseToCurrency(provider.salesToReceive)}',
+                  value: 'R\$ ${Utils.parseToCurrency(provider.salesToReceive)}',
                   icon: Icons.payment,
                   color: AppColors.warning,
                 ),

@@ -35,13 +35,14 @@ class Utils {
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
           AppButton(
+            color: AppColors.lightError,
             type: AppButtonType.outline,
             text: 'Cancelar',
             onPressed: () async => Navigator.pop(ctx, false),
           ),
           AppButton(
+            color: AppColors.secondary,
             type: AppButtonType.outline,
-            color: Theme.of(context).colorScheme.primary.withAlpha(50),
             text: 'Confirmar',
             onPressed: () async => Navigator.pop(ctx, true),
           ),

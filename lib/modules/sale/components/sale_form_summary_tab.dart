@@ -12,7 +12,7 @@ class SaleFormSummaryTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<SaleFormProvider>();
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
       child: Column(
         spacing: 12,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,6 @@ class SaleFormSummaryTab extends StatelessWidget {
               _buildLine(Icons.info, 'Status', provider.selectedStatus.label),
             ],
           ),
-          const SizedBox(height: 80),
         ],
       ),
     );

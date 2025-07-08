@@ -39,7 +39,7 @@ class SummaryCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: theme.textTheme.titleLarge?.copyWith(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -47,9 +47,7 @@ class SummaryCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             title,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.textTheme.bodySmall?.color,
-            ),
+            style: theme.textTheme.bodyMedium,
           ),
         ],
       ),

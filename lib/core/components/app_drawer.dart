@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_asset_names.dart';
 import 'package:management/core/constants/app_route_names.dart';
-import 'package:management/core/themes/app_colors.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -79,10 +78,17 @@ class _DrawerHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundColor: AppColors.lightBackground,
+                  backgroundColor: theme.scaffoldBackgroundColor,
                   child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Image.asset(AppAssetNames.logoPath),
+                    padding: const EdgeInsets.all(3.0),
+                    child: ClipOval(
+                      child: Image.asset(
+                        AppAssetNames.logoPath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
                   ),
                 ),
               ),

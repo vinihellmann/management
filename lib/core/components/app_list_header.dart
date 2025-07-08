@@ -47,9 +47,7 @@ class AppListHeader extends StatelessWidget {
               children: [
                 Text(
                   'Total de registros',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color,
-                  ),
+                  style: theme.textTheme.bodySmall,
                 ),
                 Text(
                   '$totalItemsShown de $totalItems',
@@ -67,12 +65,16 @@ class AppListHeader extends StatelessWidget {
             icon: Icons.filter_alt_outlined,
           ),
           SizedBox(width: 8),
-          AppButton(
-            type: AppButtonType.text,
-            tooltip: 'Adicionar',
-            color: Theme.of(context).colorScheme.primary.withAlpha(120),
-            onPressed: () async => onAdd(),
-            icon: Icons.add,
+          ElevatedButton(
+            onPressed: onAdd,
+            style: ButtonStyle(
+              elevation: WidgetStatePropertyAll(0),
+              padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 5)),
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(30)
+              ))
+            ),
+            child: Icon(Icons.add),
           ),
         ],
       ),

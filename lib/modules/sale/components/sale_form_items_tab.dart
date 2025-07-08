@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/sale/components/sale_form_item_tile.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
@@ -17,7 +18,7 @@ class SaleFormItemsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<SaleFormProvider>();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,15 +29,16 @@ class SaleFormItemsTab extends StatelessWidget {
               AppButton(
                 icon: Icons.add,
                 text: 'Adicionar',
-                type: AppButtonType.text,
+                type: AppButtonType.outline,
+                color: AppColors.primary,
                 onPressed: () => onSelectProduct(context),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          if (provider.items.isEmpty)
-            const Center(child: Text('Nenhum item adicionado.'))
-          else
+          if (provider.items.isEmpty) ...[
+            SizedBox(height: 12),
+            const Center(child: Text('Nenhum item adicionado.')),
+          ] else
             Expanded(
               child: ListView.separated(
                 itemCount: provider.items.length,

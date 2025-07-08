@@ -15,7 +15,7 @@ class SaleFormFields extends StatelessWidget {
     final provider = context.watch<SaleFormProvider>();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
       child: Column(
         spacing: 12,
         children: [

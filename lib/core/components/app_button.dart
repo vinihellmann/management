@@ -69,7 +69,8 @@ class _AppButtonState extends State<AppButton> {
         return ElevatedButton(
           onPressed: _handlePress,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(widget.color),
+            backgroundColor: WidgetStatePropertyAll(widget.color?.withAlpha(50)),
+            foregroundColor: WidgetStatePropertyAll(widget.color),
           ),
           child: child,
         );
@@ -78,10 +79,11 @@ class _AppButtonState extends State<AppButton> {
         return OutlinedButton(
           onPressed: _handlePress,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(widget.color),
+            backgroundColor: WidgetStatePropertyAll(widget.color?.withAlpha(50)),
+            foregroundColor: WidgetStatePropertyAll(widget.color),
             side: WidgetStatePropertyAll(
               BorderSide(
-                color: Theme.of(context).colorScheme.primary.withAlpha(100),
+                color: widget.color?.withAlpha(100) ?? Theme.of(context).colorScheme.primary.withAlpha(100),
               ),
             ),
           ),
@@ -92,7 +94,8 @@ class _AppButtonState extends State<AppButton> {
         return TextButton(
           onPressed: _handlePress,
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(widget.color),
+            backgroundColor: WidgetStatePropertyAll(widget.color?.withAlpha(50)),
+            foregroundColor: WidgetStatePropertyAll(widget.color),
           ),
           child: child,
         );
