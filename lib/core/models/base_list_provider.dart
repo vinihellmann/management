@@ -73,7 +73,7 @@ abstract class BaseListProvider<
     getData();
   }
 
-  void updateFilter(String key, String? value) {
+  void updateFilter(String key, dynamic value) {
     filters.update(key, value);
   }
 

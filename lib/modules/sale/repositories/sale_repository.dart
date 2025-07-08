@@ -80,6 +80,76 @@ class SaleRepository extends BaseRepository<SaleModel> {
     }
   }
 
+  @override
+  String? buildWhere(Map<String, dynamic>? filters) {
+    if (filters == null || filters.isEmpty) return null;
+
+    final conditions = <String>[];
+
+    final code = filters['code'];
+    if (code != null && code.toString().isNotEmpty) {
+      conditions.add('code LIKE ?');
+    }
+
+    final customerName = filters['customerName'];
+    if (customerName != null && customerName.toString().isNotEmpty) {
+      conditions.add('customerName LIKE ?');
+    }
+
+    final initialDate = filters['initialDate'];
+    final finalDate = filters['finalDate'];
+    if (initialDate != null && finalDate != null) {
+      conditions.add('createdAt BETWEEN ? AND ?');
+    } else if (initialDate != null) {
+      conditions.add('createdAt >= ?');
+    } else if (finalDate != null) {
+      conditions.add('createdAt <= ?');
+    }
+
+    final status = filters['status'];
+    if (status != null && status.toString().isNotEmpty) {
+      conditions.add('status = ?');
+    }
+
+    if (conditions.isEmpty) return null;
+    return conditions.join(' AND ');
+  }
+
+  @override
+  List<dynamic>? buildWhereArgs(Map<String, dynamic>? filters) {
+    if (filters == null || filters.isEmpty) return null;
+
+    final args = <dynamic>[];
+
+    final code = filters['code'];
+    if (code != null && code.toString().isNotEmpty) {
+      args.add('%$code%');
+    }
+
+    final customerName = filters['customerName'];
+    if (customerName != null && customerName.toString().isNotEmpty) {
+      args.add('%$customerName%');
+    }
+
+    final initialDate = filters['initialDate'];
+    final finalDate = filters['finalDate'];
+    if (initialDate != null && finalDate != null) {
+      args.add(initialDate);
+      args.add(finalDate);
+    } else if (initialDate != null) {
+      args.add(initialDate);
+    } else if (finalDate != null) {
+      args.add(finalDate);
+    }
+
+    final status = filters['status'];
+    if (status != null && status.toString().isNotEmpty) {
+      args.add(status);
+    }
+
+    return args;
+  }
+
   Future<List<SaleItemModel>> getItemsBySaleId(int saleId) async {
     try {
       final result = await db.rawQuery(

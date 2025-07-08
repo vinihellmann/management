@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:management/core/components/app_date_text_field.dart';
 import 'package:management/core/components/app_layout.dart';
 import 'package:management/core/components/app_list_header.dart';
 import 'package:management/core/components/app_loader.dart';
@@ -74,6 +75,21 @@ class _SaleListView extends StatelessWidget {
                 label: 'Código',
                 initialValue: provider.filters.code,
                 onChanged: (v) => provider.updateFilter('code', v),
+              ),
+              AppTextField(
+                label: 'Cliente',
+                initialValue: provider.filters.customerName,
+                onChanged: (v) => provider.updateFilter('customerName', v),
+              ),
+              AppDateTextField(
+                label: 'Data Inicial',
+                initialDate: provider.filters.initialDate,
+                onChanged: (v) => provider.updateFilter('initialDate', v),
+              ),
+              AppDateTextField(
+                label: 'Data Final',
+                initialDate: provider.filters.finalDate,
+                onChanged: (v) => provider.updateFilter('finalDate', v),
               ),
             ],
           ),

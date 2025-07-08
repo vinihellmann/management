@@ -3,5 +3,5 @@ abstract class BaseFilters {
 
   Map<String, dynamic> toMap();
 
-  void update(String key, String? value);
+  void update(String key, dynamic value);
 }

@@ -25,7 +25,7 @@ class ProductFilters extends BaseFilters {
   }
 
   @override
-  void update(String key, String? value) {
+  void update(String key, dynamic value) {
     switch (key) {
       case 'code':
         code = value?.trim();
