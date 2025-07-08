@@ -238,6 +238,10 @@ class SaleRepository extends BaseRepository<SaleModel> {
     await insertItems(saleId, items);
   }
 
+  Future<void> updateUnitStock(int unitId, double newStock) async {
+    await db.update(AppTableNames.productUnits, {'stock': newStock}, unitId);
+  }
+
   Future<double> sumByStatusAndDateRange(
     SaleStatusEnum status,
     DateTime start,

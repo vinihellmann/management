@@ -99,8 +99,10 @@ class AppBaseDetailPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          AppButton(type: AppButtonType.remove, onPressed: onDelete),
-          AppButton(type: AppButtonType.edit, onPressed: onEdit),
+          if (onDelete != null)
+            AppButton(type: AppButtonType.remove, onPressed: onDelete),
+          if (onEdit != null)
+            AppButton(type: AppButtonType.edit, onPressed: onEdit),
         ],
       ),
     );

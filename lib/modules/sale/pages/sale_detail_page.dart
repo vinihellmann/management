@@ -29,6 +29,10 @@ class _SaleDetailView extends StatelessWidget {
 
   const _SaleDetailView(this.sale);
 
+  bool get showButton =>
+      sale.status != SaleStatusEnum.canceled &&
+      sale.status != SaleStatusEnum.completed;
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SaleDetailProvider>();
@@ -38,20 +42,24 @@ class _SaleDetailView extends StatelessWidget {
       avatarIcon: Icons.shopping_bag,
       avatarLabel: 'Venda ${sale.code ?? ''}',
       subtitle: Utils.dateToPtBr(sale.createdAt!),
-      onEdit: () async {
-        final result = await context.pushNamed(
-          AppRouteNames.saleForm,
-          extra: sale,
-        );
-        if (result == true && context.mounted) context.pop(true);
-      },
-      onDelete: () async {
-        final confirmed = await Utils.showDeleteDialog(context);
-        if (confirmed == true) {
-          await provider.delete(sale);
-          if (context.mounted) context.pop(true);
-        }
-      },
+      onEdit: showButton
+          ? () async {
+              final result = await context.pushNamed(
+                AppRouteNames.saleForm,
+                extra: sale,
+              );
+              if (result == true && context.mounted) context.pop(true);
+            }
+          : null,
+      onDelete: showButton
+          ? () async {
+              final confirmed = await Utils.showDeleteDialog(context);
+              if (confirmed == true) {
+                await provider.delete(sale);
+                if (context.mounted) context.pop(true);
+              }
+            }
+          : null,
       details: [
         BaseDetailInfo(Icons.person, 'Cliente', sale.customerName),
         BaseDetailInfo(Icons.payment, 'Forma de Pagamento', sale.paymentMethod),

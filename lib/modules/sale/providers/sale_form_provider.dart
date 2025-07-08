@@ -5,6 +5,8 @@ import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_form_provider.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
+import 'package:management/modules/product/models/product_model.dart';
+import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
@@ -46,12 +48,12 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
   double get totalProducts =>
       items.fold(0.0, (sum, item) => sum + (item.subtotal ?? 0));
 
-  double get discount =>
-      Utils.parseToDouble(discountValueController.text == '' ? '0' : discountValueController.text)!;
+  double get discount => Utils.parseToDouble(
+    discountValueController.text == '' ? '0' : discountValueController.text,
+  )!;
 
-  double get totalSale =>
-      totalProducts - discount;
-      
+  double get totalSale => totalProducts - discount;
+
   @override
   Future<void> loadData(SaleModel? model) async {
     try {
@@ -75,7 +77,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
           items.addAll(saleItems);
         }
 
-        _recalculateTotals();
+        recalculateTotals();
       }
 
       notifyListeners();
@@ -108,13 +110,13 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
 
   void addItem(SaleItemModel item) {
     items.add(item);
-    _recalculateTotals();
+    recalculateTotals();
     notifyListeners();
   }
 
   void removeItem(SaleItemModel item) {
     items.remove(item);
-    _recalculateTotals();
+    recalculateTotals();
     notifyListeners();
   }
 
@@ -122,12 +124,52 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
     final index = items.indexWhere((i) => i.productId == item.productId);
     if (index != -1) {
       items[index] = item;
-      _recalculateTotals();
+      recalculateTotals();
       notifyListeners();
     }
   }
 
-  void _recalculateTotals() {
+  Future<(ProductModel, ProductUnitModel)> getProductAndUnit(
+    SaleItemModel item,
+  ) async {
+    final product = await repository.getProductById(item.productId!);
+    final unit = product.units.firstWhere((u) => u.id == item.unitId);
+    return (product, unit);
+  }
+
+  Future<bool> hasSufficientStock() async {
+    for (final item in items) {
+      final (product, unit) = await getProductAndUnit(item);
+      if (item.quantity! > unit.stock!) {
+        AppToastService.showError(
+          'Estoque insuficiente (${Utils.parseToCurrency(unit.stock!)}) para o item ${product.name!.toUpperCase()} (${unit.name!.toUpperCase()})',
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<void> deductStock() async {
+    for (final item in items) {
+      final (_, unit) = await getProductAndUnit(item);
+      final newStock = unit.stock! - item.quantity!;
+      await repository.updateUnitStock(unit.id!, newStock);
+    }
+  }
+
+  Future<void> restorePreviousStock() async {
+    if (model?.id == null) return;
+    final previousItems = await repository.getItemsBySaleId(model!.id!);
+
+    for (final item in previousItems) {
+      final (_, unit) = await getProductAndUnit(item);
+      final restoredStock = unit.stock! + item.quantity!;
+      await repository.updateUnitStock(unit.id!, restoredStock);
+    }
+  }
+
+  void recalculateTotals() {
     final discount = double.tryParse(discountValueController.text) ?? 0;
     final total = totalProducts - discount;
 
@@ -144,13 +186,19 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
       return false;
     }
 
-    // if (items.isEmpty) {
-    //   AppToastService.showError('Adicione ao menos um item');
-    //   return false;
-    // }
+    if (items.isEmpty) {
+      AppToastService.showError('Adicione ao menos um item');
+      return false;
+    }
 
     try {
       changeSaving();
+
+      if (model != null) {
+        await restorePreviousStock();
+      }
+
+      if (!await hasSufficientStock()) return false;
 
       final sale = SaleModel(
         id: model?.id,
@@ -162,7 +210,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
         discountPercentage: double.tryParse(discountPercentageController.text),
         discountValue: double.tryParse(discountValueController.text),
         totalProducts: totalProducts,
-        totalSale: totalProducts,
+        totalSale: totalSale,
         status: selectedStatus,
         notes: notesController.text.trim(),
         createdAt: model?.createdAt,
@@ -174,6 +222,10 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
       } else {
         await repository.update(sale);
         await repository.replaceItems(sale.id!, items);
+      }
+
+      if (selectedStatus != SaleStatusEnum.canceled) {
+        await deductStock();
       }
 
       AppToastService.showSuccess('Registro salvo com sucesso');
