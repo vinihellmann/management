@@ -4,6 +4,7 @@ import 'package:management/core/components/app_button.dart';
 import 'package:management/core/themes/app_text_styles.dart';
 import 'package:management/modules/sale/components/sale_form_fields.dart';
 import 'package:management/modules/sale/components/sale_form_items_tab.dart';
+import 'package:management/modules/sale/components/sale_form_summary_tab.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/providers/sale_form_provider.dart';
 import 'package:management/modules/sale/repositories/sale_repository.dart';
@@ -42,7 +43,7 @@ class _SaleFormViewState extends State<_SaleFormView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -74,6 +75,7 @@ class _SaleFormViewState extends State<_SaleFormView>
           tabs: const [
             Tab(text: 'Informações'),
             Tab(text: 'Itens'),
+            Tab(text: 'Resumo'),
           ],
         ),
       ),
@@ -81,14 +83,17 @@ class _SaleFormViewState extends State<_SaleFormView>
         key: provider.formKey,
         child: TabBarView(
           controller: _tabController,
-          children: [SaleFormFields(), SaleFormItemsTab()],
+          children: [
+            const SaleFormFields(),
+            const SaleFormItemsTab(),
+            const SaleFormSummaryTab(),
+          ],
         ),
       ),
       floatingActionButton: AppButton(
         type: AppButtonType.save,
         onPressed: () async {
           final success = await provider.save();
-
           if (success == true && context.mounted) {
             context.pop(true);
           }

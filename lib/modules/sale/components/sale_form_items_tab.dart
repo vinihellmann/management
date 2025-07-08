@@ -17,9 +17,9 @@ class SaleFormItemsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<SaleFormProvider>();
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
       child: Column(
-        spacing: 12,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,13 +33,14 @@ class SaleFormItemsTab extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 12),
           if (provider.items.isEmpty)
             const Center(child: Text('Nenhum item adicionado.'))
           else
             Expanded(
               child: ListView.separated(
                 itemCount: provider.items.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 8),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final item = provider.items[index];
                   return SaleFormItemTile(
@@ -56,7 +57,6 @@ class SaleFormItemsTab extends StatelessWidget {
 
   Future<void> onRemoveItem(BuildContext context, SaleItemModel item) async {
     final result = await Utils.showDeleteDialog(context);
-
     if (result == true && context.mounted) {
       context.read<SaleFormProvider>().removeItem(item);
     }

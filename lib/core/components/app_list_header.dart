@@ -15,7 +15,6 @@ class AppListHeader extends StatelessWidget {
 
   final int totalItemsShown;
   final int totalItems;
-
   final VoidCallback onAdd;
 
   final List<Widget> filterContent;
@@ -24,24 +23,56 @@ class AppListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      margin: EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
       ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 8, 12),
       child: Row(
         children: [
-          Text('Exibindo $totalItemsShown de $totalItems registros'),
-          Spacer(),
-          IconButton(
-            tooltip: 'Adicionar',
-            icon: Icon(Icons.add),
-            onPressed: onAdd,
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Total de registros',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
+                ),
+                Text(
+                  '$totalItemsShown de $totalItems',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
-          IconButton(
+          AppButton(
+            type: AppButtonType.outline,
             tooltip: 'Filtrar',
-            icon: Icon(Icons.filter_list),
             onPressed: () async => _showFilterModal(context),
+            icon: Icons.filter_alt_outlined,
+          ),
+          SizedBox(width: 8),
+          AppButton(
+            type: AppButtonType.text,
+            tooltip: 'Adicionar',
+            color: Theme.of(context).colorScheme.primary.withAlpha(120),
+            onPressed: () async => onAdd(),
+            icon: Icons.add,
           ),
         ],
       ),
@@ -53,6 +84,10 @@ class AppListHeader extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (ctx) {
         return Padding(
           padding: EdgeInsets.only(
@@ -63,24 +98,31 @@ class AppListHeader extends StatelessWidget {
           ),
           child: SingleChildScrollView(
             child: Column(
-              spacing: 12,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Filtros', style: AppTextStyles.headlineMedium),
-                const SizedBox(height: 4),
-                ...filterContent,
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(ctx).cardColor,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: Column(spacing: 16, children: filterContent),
+                ),
+                const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppButton(
-                      tooltip: 'Limpar',
+                      tooltip: 'Limpar filtros',
                       text: 'Limpar',
                       icon: Icons.clear_all,
                       onPressed: onClearFilter,
                     ),
                     AppButton(
-                      tooltip: 'Buscar',
+                      tooltip: 'Aplicar filtros',
                       text: 'Buscar',
                       icon: Icons.search,
                       onPressed: onSearchFilter,

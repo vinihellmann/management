@@ -9,6 +9,7 @@ import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/modules/sale/repositories/sale_repository.dart';
+import 'package:management/shared/utils/utils.dart';
 
 class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
   SaleFormProvider(super.repository);
@@ -45,6 +46,12 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
   double get totalProducts =>
       items.fold(0.0, (sum, item) => sum + (item.subtotal ?? 0));
 
+  double get discount =>
+      Utils.parseToDouble(discountValueController.text == '' ? '0' : discountValueController.text)!;
+
+  double get totalSale =>
+      totalProducts - discount;
+      
   @override
   Future<void> loadData(SaleModel? model) async {
     try {

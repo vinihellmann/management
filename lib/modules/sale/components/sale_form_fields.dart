@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:management/core/components/app_section_description.dart';
+import 'package:management/core/components/app_section_form_Card.dart';
 import 'package:management/core/components/app_select.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/modules/sale/components/sale_form_customer_card.dart';
@@ -13,48 +13,57 @@ class SaleFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SaleFormProvider>();
+
     return SingleChildScrollView(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
       child: Column(
         spacing: 12,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SaleFormCustomerCard(),
-          AppSectionDescription(description: 'Dados do Pagamento'),
-          AppSelect<String>(
-            isRequired: true,
-            label: 'Forma de Pagamento',
-            value: provider.paymentMethod,
-            onChanged: (s) => provider.setPaymentMethod(s),
-            items: provider.paymentMethodOptions
-                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                .toList(),
+          const SaleFormCustomerCard(),
+          AppFormSectionCard(
+            title: 'Dados do Pagamento',
+            children: [
+              AppSelect<String>(
+                isRequired: true,
+                label: 'Forma de Pagamento',
+                value: provider.paymentMethod,
+                onChanged: provider.setPaymentMethod,
+                items: provider.paymentMethodOptions
+                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .toList(),
+              ),
+              AppSelect<String>(
+                isRequired: true,
+                label: 'Condição de Pagamento',
+                value: provider.paymentCondition,
+                onChanged: provider.setPaymentCondition,
+                items: provider.paymentConditionOptions
+                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .toList(),
+              ),
+            ],
           ),
-          AppSelect<String>(
-            isRequired: true,
-            label: 'Condição de Pagamento',
-            value: provider.paymentCondition,
-            onChanged: (s) => provider.setPaymentCondition(s),
-            items: provider.paymentConditionOptions
-                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                .toList(),
+          AppFormSectionCard(
+            title: 'Outras Informações',
+            children: [
+              AppSelect<SaleStatusEnum>(
+                isRequired: true,
+                label: 'Status',
+                value: provider.selectedStatus,
+                onChanged: provider.setStatus,
+                items: SaleStatusEnum.values
+                    .map(
+                      (s) => DropdownMenuItem(value: s, child: Text(s.label)),
+                    )
+                    .toList(),
+              ),
+              AppTextField(
+                label: 'Anotações',
+                maxLines: 3,
+                controller: provider.notesController,
+              ),
+            ],
           ),
-          AppSectionDescription(description: 'Outras Informações'),
-          AppSelect<SaleStatusEnum>(
-            isRequired: true,
-            label: 'Status',
-            value: provider.selectedStatus,
-            onChanged: (s) => provider.setStatus(s),
-            items: SaleStatusEnum.values
-                .map((s) => DropdownMenuItem(value: s, child: Text(s.label)))
-                .toList(),
-          ),
-          AppTextField(
-            label: 'Anotações',
-            maxLines: 3,
-            controller: provider.notesController,
-          ),
-          SizedBox(height: 60),
         ],
       ),
     );

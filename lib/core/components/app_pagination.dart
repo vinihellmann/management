@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/components/app_button.dart';
 
 class AppPagination extends StatelessWidget {
   final int currentPage;
-  final VoidCallback? onNext;
-  final VoidCallback? onPrevious;
+  final Future<void> Function()? onNext;
+  final Future<void> Function()? onPrevious;
   final bool hasNext;
   final bool hasPrevious;
   final int totalPages;
@@ -20,28 +21,46 @@ class AppPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            tooltip: 'Página Anterior',
-            onPressed: hasPrevious ? onPrevious : null,
-            icon: const Icon(Icons.chevron_left),
-          ),
-          const SizedBox(width: 16),
-          Text('Página $currentPage de $totalPages'),
-          const SizedBox(width: 16),
-          IconButton(
-            tooltip: 'Próxima Página',
-            onPressed: hasNext ? onNext : null,
-            icon: const Icon(Icons.chevron_right),
-          ),
-        ],
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            AppButton(
+              type: AppButtonType.outline,
+              tooltip: 'Página Anterior',
+              onPressed: hasPrevious ? onPrevious : null,
+              icon: Icons.chevron_left,
+            ),
+            Text(
+              'Página $currentPage de $totalPages',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            AppButton(
+              type: AppButtonType.outline,
+              tooltip: 'Próxima Página',
+              onPressed: hasNext ? onNext : null,
+              icon: Icons.chevron_right,
+            ),
+          ],
+        ),
       ),
     );
   }

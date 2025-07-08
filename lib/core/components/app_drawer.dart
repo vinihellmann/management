@@ -11,45 +11,48 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.toString();
+    final theme = Theme.of(context);
 
     return SafeArea(
       child: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            spacing: 8,
-            children: [
-              const _DrawerHeader(),
-              Padding(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            const _DrawerHeader(),
+            const Divider(height: 24, thickness: 1, indent: 16, endIndent: 16),
+            Expanded(
+              child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Divider(height: 4),
+                children: [
+                  _DrawerItem(
+                    label: 'Dashboard',
+                    icon: Icons.dashboard_outlined,
+                    route: AppRouteNames.dashboard,
+                    current: currentRoute,
+                  ),
+                  _DrawerItem(
+                    label: 'Clientes',
+                    icon: Icons.people_outline,
+                    route: AppRouteNames.customers,
+                    current: currentRoute,
+                  ),
+                  _DrawerItem(
+                    label: 'Produtos',
+                    icon: Icons.inventory_2_outlined,
+                    route: AppRouteNames.products,
+                    current: currentRoute,
+                  ),
+                  _DrawerItem(
+                    label: 'Vendas',
+                    icon: Icons.shopping_bag_outlined,
+                    route: AppRouteNames.sales,
+                    current: currentRoute,
+                  ),
+                ],
               ),
-              _DrawerItem(
-                'Dashboard',
-                Icons.dashboard,
-                AppRouteNames.dashboard,
-                currentRoute,
-              ),
-              _DrawerItem(
-                'Clientes',
-                Icons.people,
-                AppRouteNames.customers,
-                currentRoute,
-              ),
-              _DrawerItem(
-                'Produtos',
-                Icons.inventory_2,
-                AppRouteNames.products,
-                currentRoute,
-              ),
-              _DrawerItem(
-                'Vendas',
-                Icons.shopping_bag,
-                AppRouteNames.sales,
-                currentRoute,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -69,21 +72,23 @@ class _DrawerHeader extends StatelessWidget {
         final version = snapshot.data?.version ?? '';
 
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 child: CircleAvatar(
                   radius: 30,
                   backgroundColor: AppColors.lightBackground,
-                  child: Image.asset(AppAssetNames.logoPath),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Image.asset(AppAssetNames.logoPath),
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'NexGestor',
@@ -91,7 +96,12 @@ class _DrawerHeader extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text('Versão: $version', style: theme.textTheme.bodySmall),
+                  Text(
+                    'Versão $version',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.hintColor,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -108,29 +118,52 @@ class _DrawerItem extends StatelessWidget {
   final String route;
   final String current;
 
-  const _DrawerItem(this.label, this.icon, this.route, this.current);
+  const _DrawerItem({
+    required this.label,
+    required this.icon,
+    required this.route,
+    required this.current,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final selected = current == route;
     final theme = Theme.of(context);
+    final selected = current == route;
 
-    return ListTile(
-      style: ListTileStyle.drawer,
-      selected: selected,
-      selectedTileColor: theme.colorScheme.primary.withAlpha(25),
-      leading: Icon(icon, color: selected ? theme.colorScheme.primary : null),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: selected ? theme.colorScheme.primary : null,
-          fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Material(
+        borderRadius: BorderRadius.circular(12),
+        color: selected ? theme.colorScheme.primary.withAlpha(50) : null,
+        child: ListTile(
+          selected: selected,
+          selectedTileColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
+          leading: Icon(
+            icon,
+            color: selected ? theme.colorScheme.primary : theme.iconTheme.color,
+          ),
+          title: Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
+              color: selected ? theme.colorScheme.primary : null,
+            ),
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            if (current != route) {
+              context.goNamed(route);
+            }
+          },
         ),
       ),
-      onTap: () {
-        Navigator.of(context).pop();
-        context.pushNamed(route);
-      },
     );
   }
 }

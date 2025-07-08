@@ -79,6 +79,11 @@ class _AppButtonState extends State<AppButton> {
           onPressed: _handlePress,
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(widget.color),
+            side: WidgetStatePropertyAll(
+              BorderSide(
+                color: Theme.of(context).colorScheme.primary.withAlpha(100),
+              ),
+            ),
           ),
           child: child,
         );

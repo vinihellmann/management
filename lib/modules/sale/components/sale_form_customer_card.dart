@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:management/core/components/app_container_card.dart';
-import 'package:management/core/components/app_section_description.dart';
+import 'package:management/core/components/app_section_form_card.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/core/themes/app_text_styles.dart';
@@ -15,103 +14,106 @@ class SaleFormCustomerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SaleFormProvider>();
+    final customer = provider.customer;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            AppSectionDescription(description: 'Dados do Cliente'),
-            Spacer(),
-            TextButton.icon(
-              icon: Icon(Icons.search),
-              label: Text('Buscar'),
-              onPressed: () => onSelectCustomer(context),
-            ),
-          ],
-        ),
-        if (provider.customer.id == null) ...[
+        if (customer.id == null)
           GestureDetector(
-            onTap: () => onSelectCustomer(context),
-            child: AppContainerCard(
+            onTap: () => _onSelectCustomer(context),
+            child: Container(
+              height: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: AppColors.primary.withAlpha(15),
+                border: Border.all(color: AppColors.primary, width: 1),
+              ),
               child: Row(
-                spacing: 12,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.people, size: 28, color: AppColors.primary),
-                  Center(
-                    child: Text(
-                      'Selecione um cliente',
-                      style: AppTextStyles.bodyLarge,
+                  const Icon(
+                    Icons.person_search,
+                    size: 28,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Selecione um cliente',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ] else ...[
-          AppContainerCard(
-            child: Column(
-              spacing: 12,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          )
+        else
+          GestureDetector(
+            onTap: () => _onSelectCustomer(context),
+            child: AppFormSectionCard(
+              title: 'Dados do Cliente',
               children: [
-                RowInfo(
-                  label: 'Nome/Razão Social:',
-                  content: provider.customer.name!.toUpperCase(),
+                _buildInfo(Icons.person, 'Nome/Razão Social', customer.name!),
+                _buildInfo(
+                  Icons.badge,
+                  'Nome Fantasia',
+                  customer.fantasy ?? '',
                 ),
-                RowInfo(
-                  label: 'CPF/CNPJ:',
-                  content: provider.customer.document!,
+                _buildInfo(
+                  Icons.text_snippet_rounded,
+                  'CPF/CNPJ',
+                  customer.document!,
                 ),
-                RowInfo(
-                  label: 'Logradouro:',
-                  content: provider.customer.address!,
+                _buildInfo(Icons.email, 'Email', customer.email ?? ''),
+                _buildInfo(Icons.phone, 'Telefone', customer.phone ?? ''),
+                _buildInfo(
+                  Icons.home,
+                  'Endereço',
+                  '${customer.address}, ${customer.number}, ${customer.neighborhood}',
                 ),
-                RowInfo(
-                  label: 'Bairro:',
-                  content: provider.customer.neighborhood!,
+                _buildInfo(
+                  Icons.location_city,
+                  'Cidade/Estado',
+                  '${customer.city}/${customer.state}',
                 ),
-                RowInfo(label: 'Número:', content: provider.customer.number!),
-                RowInfo(
-                  label: 'Cidade:',
-                  content:
-                      '${provider.customer.city}/${provider.customer.state}',
-                ),
+                _buildInfo(Icons.pin_drop, 'CEP', customer.zipcode ?? ''),
               ],
             ),
           ),
-        ],
       ],
     );
   }
 
-  Future<void> onSelectCustomer(BuildContext context) async {
-    final result = await context.pushNamed(AppRouteNames.customerSelect);
-
-    if (result is CustomerModel && context.mounted) {
-      context.read<SaleFormProvider>().setCustomer(result);
-    }
-  }
-}
-
-class RowInfo extends StatelessWidget {
-  const RowInfo({super.key, required this.label, required this.content});
-
-  final String label;
-  final String content;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildInfo(IconData icon, String label, String value) {
     return Row(
-      spacing: 10,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label),
+        Icon(icon, size: 20),
+        const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            content,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.end,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: AppTextStyles.bodySmall),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: AppTextStyles.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _onSelectCustomer(BuildContext context) async {
+    final result = await context.pushNamed(AppRouteNames.customerSelect);
+    if (result is CustomerModel && context.mounted) {
+      context.read<SaleFormProvider>().setCustomer(result);
+    }
   }
 }

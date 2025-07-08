@@ -54,12 +54,12 @@ abstract class BaseListProvider<
     }
   }
 
-  void nextPage() {
+  Future<void> nextPage() async {
     currentPage++;
     getData(false);
   }
 
-  void previousPage() {
+  Future<void> previousPage() async {
     if (currentPage > 1) {
       currentPage--;
       getData(false);

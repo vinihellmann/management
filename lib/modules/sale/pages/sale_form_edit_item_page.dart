@@ -81,6 +81,7 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
     final theme = Theme.of(context);
 
     return AppLayout(
+      withDrawer: false,
       title: widget.saleItem != null ? 'Editar Item' : 'Adicionar Produto',
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

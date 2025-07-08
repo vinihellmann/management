@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:intl/intl.dart';
+import 'package:management/core/components/app_button.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
 
@@ -33,13 +34,16 @@ class Utils {
         content: const Text('Deseja realmente deletar o registro?'),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancelar'),
+          AppButton(
+            type: AppButtonType.outline,
+            text: 'Cancelar',
+            onPressed: () async => Navigator.pop(ctx, false),
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Confirmar'),
+          AppButton(
+            type: AppButtonType.outline,
+            color: Theme.of(context).colorScheme.primary.withAlpha(50),
+            text: 'Confirmar',
+            onPressed: () async => Navigator.pop(ctx, true),
           ),
         ],
       ),
