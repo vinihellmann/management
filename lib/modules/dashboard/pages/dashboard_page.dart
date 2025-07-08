@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:management/core/components/app_detail_info_card.dart';
 import 'package:management/core/components/app_layout.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/router/app_router.dart';
 import 'package:management/core/themes/app_colors.dart';
-import 'package:management/core/themes/app_text_styles.dart';
+import 'package:management/modules/dashboard/components/dashboard_pie_chart.dart';
+import 'package:management/modules/dashboard/components/summary_Card.dart';
 import 'package:management/modules/dashboard/providers/dashboard_provider.dart';
+import 'package:management/shared/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -14,7 +15,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => DashboardProvider(ctx.read()),
+      create: (ctx) => DashboardProvider(ctx.read(), ctx.read()),
       child: const _DashboardView(),
     );
   }
@@ -59,68 +60,48 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<DashboardProvider>();
-    final theme = Theme.of(context);
-
     return AppLayout(
       title: 'Dashboard',
       showBack: false,
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AppSectionDescription(description: 'Visão geral'),
-            ),
-            Column(
-              spacing: 24,
+            const AppSectionDescription(description: 'Visão Geral'),
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
               children: [
-                AppDetailInfoCard(
+                SummaryCard(
                   title: 'Clientes',
                   value: '${provider.totalCustomers}',
                   icon: Icons.people,
                   color: AppColors.primary,
                 ),
-                AppDetailInfoCard(
+                SummaryCard(
                   title: 'Vendas do mês',
-                  value: 'R\$ 12.560,00',
+                  value: 'R\$${Utils.parseToCurrency(provider.salesThisMonth)}',
                   icon: Icons.attach_money,
                   color: AppColors.secondary,
                 ),
-                AppDetailInfoCard(
+                SummaryCard(
                   title: 'A receber',
-                  value: 'R\$ 5.420,00',
+                  value: 'R\$${Utils.parseToCurrency(provider.salesToReceive)}',
                   icon: Icons.payment,
                   color: AppColors.warning,
                 ),
-                AppDetailInfoCard(
-                  title: 'Ordens em aberto',
-                  value: '8',
-                  icon: Icons.build,
+                SummaryCard(
+                  title: 'Vendas em aberto',
+                  value: '${provider.salesOpenCount}',
+                  icon: Icons.shopping_bag,
                   color: AppColors.lightError,
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AppSectionDescription(
-                description: 'Gráficos e relatórios',
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                'Gráfico de vendas (em breve)',
-                style: AppTextStyles.bodyMedium,
-              ),
-            ),
+            const SizedBox(height: 12),
+            const AppSectionDescription(description: 'Gráficos e Relatórios'),
+            DashboardPieChart(data: provider.salesByStatusMap),
           ],
         ),
       ),

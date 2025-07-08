@@ -79,7 +79,7 @@ class SaleFormItemTile extends StatelessWidget {
                     style: theme.textTheme.bodySmall,
                   ),
                   Text(
-                    'Unitário: R\$${Utils.parseToCurrency(item.unitPrice ?? 0)}',
+                    'Unitário: R\$ ${Utils.parseToCurrency(item.unitPrice ?? 0)}',
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -87,7 +87,7 @@ class SaleFormItemTile extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  'Subtotal: R\$${Utils.parseToCurrency(item.subtotal ?? 0)}',
+                  'Subtotal: R\$ ${Utils.parseToCurrency(item.subtotal ?? 0)}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.primary,

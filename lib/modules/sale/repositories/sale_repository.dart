@@ -8,6 +8,7 @@ import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
+import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SaleRepository extends BaseRepository<SaleModel> {
@@ -165,5 +166,60 @@ class SaleRepository extends BaseRepository<SaleModel> {
   Future<void> replaceItems(int saleId, List<SaleItemModel> items) async {
     await deleteItemsBySaleId(saleId);
     await insertItems(saleId, items);
+  }
+
+  Future<double> sumByStatusAndDateRange(
+    SaleStatusEnum status,
+    DateTime start,
+    DateTime end,
+  ) async {
+    final result = await db.rawQuery(
+      '''
+        SELECT SUM(totalSale) as total
+        FROM sales
+        WHERE status = ?
+          AND createdAt BETWEEN ? AND ?
+      ''',
+      [status.name, start.toIso8601String(), end.toIso8601String()],
+    );
+
+    return (result.first['total'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  Future<int> countByStatus(SaleStatusEnum status) async {
+    final result = await db.rawQuery(
+      '''
+        SELECT COUNT(*) as total
+        FROM sales
+        WHERE status = ?
+      ''',
+      [status.name],
+    );
+
+    return (result.first['total'] as int?) ?? 0;
+  }
+
+  Future<double> sumByStatuses(List<SaleStatusEnum> statuses) async {
+    final placeholders = List.filled(statuses.length, '?').join(',');
+    final result = await db.rawQuery('''
+      SELECT SUM(totalSale) as total
+      FROM sales
+      WHERE status IN ($placeholders)
+      ''', statuses.map((s) => s.name).toList());
+
+    return (result.first['total'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  Future<Map<String, double>> getSumByStatus() async {
+    final result = await db.rawQuery('''
+      SELECT status, SUM(totalSale) as total
+      FROM sales
+      GROUP BY status
+    ''');
+
+    return {
+      for (var row in result)
+        (row['status'] as String): (row['total'] as num?)?.toDouble() ?? 0.0,
+    };
   }
 }

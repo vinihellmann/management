@@ -5,5 +5,5 @@ class BaseDetailInfo {
   final String label;
   final String? value;
 
-  BaseDetailInfo({required this.icon, required this.label, this.value});
+  BaseDetailInfo(this.icon, this.label, this.value);
 }

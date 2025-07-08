@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/shared/utils/utils.dart';
@@ -13,7 +12,7 @@ class SaleListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final statusColor = _getStatusColor(sale.status, theme);
+    final statusColor = Utils.getStatusColor(sale.status, theme);
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -78,7 +77,7 @@ class SaleListItem extends StatelessWidget {
                     style: theme.textTheme.bodySmall,
                   ),
                   Text(
-                    'Total: R\$${Utils.parseToCurrency(sale.totalSale ?? 0)}',
+                    'Total: R\$ ${Utils.parseToCurrency(sale.totalSale ?? 0)}',
                     style: theme.textTheme.bodySmall!.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -89,7 +88,7 @@ class SaleListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Produtos: R\$${Utils.parseToCurrency(sale.totalProducts ?? 0)}',
+                    'Produtos: R\$ ${Utils.parseToCurrency(sale.totalProducts ?? 0)}',
                     style: theme.textTheme.bodySmall,
                   ),
                   Text(_buildDiscountText(), style: theme.textTheme.bodySmall),
@@ -115,28 +114,11 @@ class SaleListItem extends StatelessWidget {
 
   String _buildDiscountText() {
     if ((sale.discountValue ?? 0) > 0) {
-      return 'Desc: R\$${Utils.parseToCurrency(sale.discountValue!)}';
+      return 'Desc: R\$ ${Utils.parseToCurrency(sale.discountValue!)}';
     }
     if ((sale.discountPercentage ?? 0) > 0) {
       return 'Desc: ${Utils.parseToCurrency(sale.discountPercentage!)}%';
     }
     return 'Desc: R\$0,00';
-  }
-
-  Color _getStatusColor(SaleStatusEnum status, ThemeData theme) {
-    switch (status) {
-      case SaleStatusEnum.open:
-        return Colors.blue;
-      case SaleStatusEnum.awaitingPayment:
-        return AppColors.warning;
-      case SaleStatusEnum.confirmed:
-        return theme.colorScheme.primary;
-      case SaleStatusEnum.sent:
-        return Colors.teal;
-      case SaleStatusEnum.completed:
-        return theme.colorScheme.secondary;
-      case SaleStatusEnum.canceled:
-        return theme.colorScheme.error;
-    }
   }
 }

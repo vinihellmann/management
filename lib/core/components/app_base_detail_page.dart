@@ -32,6 +32,7 @@ class AppBaseDetailPage extends StatelessWidget {
 
     return AppLayout(
       title: title,
+      withDrawer: false,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
