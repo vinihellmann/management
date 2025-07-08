@@ -158,9 +158,7 @@ class _DrawerItem extends StatelessWidget {
           ),
           onTap: () {
             Navigator.of(context).pop();
-            if (current != route) {
-              context.goNamed(route);
-            }
+            context.pushNamed(route);
           },
         ),
       ),
