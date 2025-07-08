@@ -35,7 +35,7 @@ class _SaleDetailView extends StatelessWidget {
 
     return AppBaseDetailPage(
       title: 'Detalhes da Venda',
-      avatarIcon: Icons.shopping_cart,
+      avatarIcon: Icons.shopping_bag,
       avatarLabel: 'Venda ${sale.code ?? ''}',
       subtitle: Utils.dateToPtBr(sale.createdAt!),
       onEdit: () async {
