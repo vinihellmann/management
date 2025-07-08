@@ -7,6 +7,7 @@ import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/sale/components/sale_form_item_tile.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/providers/sale_form_provider.dart';
+import 'package:management/shared/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class SaleFormItemsTab extends StatelessWidget {
@@ -18,6 +19,7 @@ class SaleFormItemsTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
+        spacing: 12,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -25,31 +27,39 @@ class SaleFormItemsTab extends StatelessWidget {
               const AppSectionDescription(description: 'Itens da Venda'),
               AppButton(
                 icon: Icons.add,
-                text: 'Adicionar item',
+                text: 'Adicionar',
                 type: AppButtonType.text,
                 onPressed: () => onSelectProduct(context),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: provider.items.isEmpty
-                ? const Center(child: Text('Nenhum item adicionado.'))
-                : ListView.separated(
-                    itemCount: provider.items.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final item = provider.items[index];
-                      return SaleFormItemTile(
-                        item: item,
-                        onRemove: () => provider.removeItem(item),
-                      );
-                    },
-                  ),
-          ),
+          if (provider.items.isEmpty)
+            const Center(child: Text('Nenhum item adicionado.'))
+          else
+            Expanded(
+              child: ListView.separated(
+                itemCount: provider.items.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  final item = provider.items[index];
+                  return SaleFormItemTile(
+                    item: item,
+                    onRemove: () => onRemoveItem(context, item),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );
+  }
+
+  Future<void> onRemoveItem(BuildContext context, SaleItemModel item) async {
+    final result = await Utils.showDeleteDialog(context);
+
+    if (result == true && context.mounted) {
+      context.read<SaleFormProvider>().removeItem(item);
+    }
   }
 
   Future<void> onSelectProduct(BuildContext context) async {

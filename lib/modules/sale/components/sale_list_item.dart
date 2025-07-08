@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
+import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/shared/utils/utils.dart';
 
 class SaleListItem extends StatelessWidget {
@@ -10,39 +12,131 @@ class SaleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          title: Text(
-            '${sale.code} - ${sale.customerName}'.toUpperCase(),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Column(
+    final theme = Theme.of(context);
+    final statusColor = _getStatusColor(sale.status, theme);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Column(
+            spacing: 12,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      'Data: ${Utils.dateToPtBr(sale.createdAt!)}',
+                      '${sale.code} - ${sale.customerName?.toUpperCase() ?? ''}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  Icon(Icons.chevron_right, size: 20, color: theme.hintColor),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: statusColor.withAlpha(25),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  sale.status.label,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Expanded(
                     child: Text(
-                      'Total: R\$${Utils.parseToCurrency(sale.totalSale!)}',
-                      textAlign: TextAlign.end,
+                      'Pagamento: ${sale.paymentMethod ?? '-'} / ${sale.paymentCondition ?? '-'}',
+                      style: theme.textTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Data: ${Utils.dateToPtBr(sale.createdAt!)}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  Text(
+                    'Total: R\$${Utils.parseToCurrency(sale.totalSale ?? 0)}',
+                    style: theme.textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Produtos: R\$${Utils.parseToCurrency(sale.totalProducts ?? 0)}',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  Text(_buildDiscountText(), style: theme.textTheme.bodySmall),
+                ],
+              ),
+              if ((sale.notes ?? '').trim().isNotEmpty) ...[
+                const SizedBox(height: 1),
+                Text(
+                  'Obs: ${sale.notes}',
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
-          onTap: onTap,
         ),
-      ],
+      ),
     );
+  }
+
+  String _buildDiscountText() {
+    if ((sale.discountValue ?? 0) > 0) {
+      return 'Desc: R\$${Utils.parseToCurrency(sale.discountValue!)}';
+    }
+    if ((sale.discountPercentage ?? 0) > 0) {
+      return 'Desc: ${Utils.parseToCurrency(sale.discountPercentage!)}%';
+    }
+    return 'Desc: R\$0,00';
+  }
+
+  Color _getStatusColor(SaleStatusEnum status, ThemeData theme) {
+    switch (status) {
+      case SaleStatusEnum.open:
+        return Colors.blue;
+      case SaleStatusEnum.awaitingPayment:
+        return AppColors.warning;
+      case SaleStatusEnum.confirmed:
+        return theme.colorScheme.primary;
+      case SaleStatusEnum.sent:
+        return Colors.teal;
+      case SaleStatusEnum.completed:
+        return theme.colorScheme.secondary;
+      case SaleStatusEnum.canceled:
+        return theme.colorScheme.error;
+    }
   }
 }
