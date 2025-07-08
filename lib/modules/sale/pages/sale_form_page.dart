@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
-import 'package:management/core/themes/app_text_styles.dart';
+import 'package:management/core/components/app_layout.dart';
 import 'package:management/modules/sale/components/sale_form_fields.dart';
 import 'package:management/modules/sale/components/sale_form_items_tab.dart';
 import 'package:management/modules/sale/components/sale_form_summary_tab.dart';
@@ -68,20 +68,9 @@ class _SaleFormViewState extends State<_SaleFormView>
     final provider = context.read<SaleFormProvider>();
     final isEdit = provider.model != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 80,
-        title: Text(
-          isEdit ? 'Editar Venda' : 'Nova Venda',
-          style: AppTextStyles.headlineMedium,
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => context.pop(),
-        ),
-      ),
+    return AppLayout(
+      withDrawer: false,
+      title: isEdit ? 'Editar Venda' : 'Nova Venda',
       body: Column(
         children: [
           Padding(
@@ -89,7 +78,6 @@ class _SaleFormViewState extends State<_SaleFormView>
             child: Row(
               children: List.generate(labels.length, (index) {
                 final isSelected = index == currentIndex;
-            
                 return Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),

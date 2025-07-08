@@ -26,7 +26,7 @@ class AppListHeader extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       margin: EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: theme.cardColor,
