@@ -131,8 +131,13 @@ class SaleRepository extends BaseRepository<SaleModel> {
       args.add('%$customerName%');
     }
 
-    final initialDate = filters['initialDate'];
-    final finalDate = filters['finalDate'];
+    final initialDate = DateTime.tryParse(
+      filters['initialDate'],
+    )?.toIso8601String();
+    final finalDate = DateTime.tryParse(
+      filters['finalDate'],
+    )?.add(Duration(days: 1)).toIso8601String();
+    
     if (initialDate != null && finalDate != null) {
       args.add(initialDate);
       args.add(finalDate);

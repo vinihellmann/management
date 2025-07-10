@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_asset_names.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/shared/utils/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -47,6 +48,16 @@ class AppDrawer extends StatelessWidget {
                     icon: Icons.shopping_bag_outlined,
                     route: AppRouteNames.sales,
                     current: currentRoute,
+                  ),
+                  _DrawerItem(
+                    label: 'Exportar Banco de Dados',
+                    icon: Icons.save_alt_outlined,
+                    route: 'export-db',
+                    current: '',
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                      await Utils.exportDatabase(context);
+                    },
                   ),
                 ],
               ),
@@ -123,12 +134,14 @@ class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String route;
   final String current;
+  final GestureTapCallback? onTap;
 
   const _DrawerItem({
     required this.label,
     required this.icon,
     required this.route,
     required this.current,
+    this.onTap,
   });
 
   @override
@@ -162,10 +175,12 @@ class _DrawerItem extends StatelessWidget {
               color: selected ? theme.colorScheme.primary : null,
             ),
           ),
-          onTap: () {
-            Navigator.of(context).pop();
-            context.pushNamed(route);
-          },
+          onTap:
+              onTap ??
+              () {
+                Navigator.of(context).pop();
+                context.pushNamed(route);
+              },
         ),
       ),
     );

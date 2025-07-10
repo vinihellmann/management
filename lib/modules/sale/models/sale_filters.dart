@@ -22,8 +22,8 @@ class SaleFilters extends BaseFilters {
     return {
       if (code?.isNotEmpty == true) 'code': code,
       if (customerName?.isNotEmpty == true) 'customerName': customerName,
-      if (initialDate != null) 'createdAt': initialDate!.toIso8601String(),
-      if (finalDate != null) 'createdAt': finalDate!.toIso8601String(),
+      if (initialDate != null) 'initialDate': initialDate!.toIso8601String(),
+      if (finalDate != null) 'finalDate': finalDate!.toIso8601String(),
       if (status != null) 'status': status!.name,
     };
   }

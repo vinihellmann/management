@@ -1,11 +1,46 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:management/core/components/app_button.dart';
+import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Utils {
+  static Future<void> exportDatabase(BuildContext context) async {
+    try {
+      final dbPath = await getDatabasesPath();
+      final sourcePath = join(dbPath, 'management.db');
+
+      final directory = await getApplicationDocumentsDirectory();
+      final exportPath = join(directory.path, 'management_backup.db');
+
+      final sourceFile = File(sourcePath);
+      final exportFile = File(exportPath);
+
+      if (await sourceFile.exists()) {
+        await sourceFile.copy(exportFile.path);
+
+        await SharePlus.instance.share(
+          ShareParams(
+            text: 'Backup do banco de dados',
+            files: [XFile(exportFile.path)],
+          ),
+        );
+      } else {
+        AppToastService.showError('Banco de dados não encontrado');
+      }
+    } catch (e) {
+      AppToastService.showError('Erro ao exportar banco: $e');
+    }
+  }
+
   static String? dateToPtBr(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
   }
