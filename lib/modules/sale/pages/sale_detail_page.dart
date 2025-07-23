@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_base_detail_page.dart';
+import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/models/base_detail_info.dart';
+import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/modules/sale/providers/sale_detail_provider.dart';
@@ -29,9 +31,13 @@ class _SaleDetailView extends StatelessWidget {
 
   const _SaleDetailView(this.sale);
 
-  bool get showButton =>
+  bool get showEditAndDelete =>
       sale.status != SaleStatusEnum.canceled &&
       sale.status != SaleStatusEnum.completed;
+
+  bool get showSend => sale.status == SaleStatusEnum.confirmed;
+  bool get showComplete => sale.status == SaleStatusEnum.sent;
+  bool get showCancel => sale.status == SaleStatusEnum.completed;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +48,7 @@ class _SaleDetailView extends StatelessWidget {
       avatarIcon: Icons.shopping_bag,
       avatarLabel: 'Venda ${sale.code ?? ''}',
       subtitle: Utils.dateToPtBr(sale.createdAt!),
-      onEdit: showButton
+      onEdit: showEditAndDelete
           ? () async {
               final result = await context.pushNamed(
                 AppRouteNames.saleForm,
@@ -51,7 +57,7 @@ class _SaleDetailView extends StatelessWidget {
               if (result == true && context.mounted) context.pop(true);
             }
           : null,
-      onDelete: showButton
+      onDelete: showEditAndDelete
           ? () async {
               final confirmed = await Utils.showDeleteDialog(context);
               if (confirmed == true) {
@@ -88,6 +94,32 @@ class _SaleDetailView extends StatelessWidget {
         BaseDetailInfo(Icons.info, 'Status', sale.status.label),
         if (sale.notes?.isNotEmpty == true)
           BaseDetailInfo(Icons.notes, 'Observações', sale.notes),
+      ],
+      options: [
+        if (showSend)
+          AppButton(
+            type: AppButtonType.fab,
+            icon: Icons.send,
+            tooltip: 'Enviar',
+            color: AppColors.tertiary,
+            onPressed: () async {},
+          ),
+        if (showComplete)
+          AppButton(
+            type: AppButtonType.fab,
+            icon: Icons.done,
+            tooltip: 'Completar',
+            color: AppColors.primary,
+            onPressed: () async {},
+          ),
+        if (showCancel)
+          AppButton(
+            type: AppButtonType.fab,
+            icon: Icons.block,
+            tooltip: 'Cancelar',
+            color: Theme.of(context).colorScheme.error,
+            onPressed: () async {},
+          ),
       ],
       children: provider.items.isEmpty
           ? null

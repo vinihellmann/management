@@ -119,6 +119,6 @@ class SaleListItem extends StatelessWidget {
     if ((sale.discountPercentage ?? 0) > 0) {
       return 'Desc: ${Utils.parseToCurrency(sale.discountPercentage!)}%';
     }
-    return 'Desc: R\$0,00';
+    return 'Desc: R\$ 0,00';
   }
 }

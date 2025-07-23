@@ -91,7 +91,7 @@ class Utils {
       case SaleStatusEnum.open:
         return Colors.blue;
       case SaleStatusEnum.awaitingPayment:
-        return AppColors.warning;
+        return AppColors.tertiary;
       case SaleStatusEnum.confirmed:
         return theme.colorScheme.primary;
       case SaleStatusEnum.sent:

@@ -24,4 +24,10 @@ extension SaleStatusEnumExtension on SaleStatusEnum {
         return 'Concluída';
     }
   }
+
+  static List<SaleStatusEnum> get selectableValues => [
+    SaleStatusEnum.open,
+    SaleStatusEnum.awaitingPayment,
+    SaleStatusEnum.confirmed,
+  ];
 }

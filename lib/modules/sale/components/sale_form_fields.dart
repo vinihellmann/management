@@ -51,7 +51,7 @@ class SaleFormFields extends StatelessWidget {
                 label: 'Status',
                 value: provider.selectedStatus,
                 onChanged: provider.setStatus,
-                items: SaleStatusEnum.values
+                items: SaleStatusEnumExtension.selectableValues
                     .map(
                       (s) => DropdownMenuItem(value: s, child: Text(s.label)),
                     )

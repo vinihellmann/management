@@ -89,7 +89,7 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
                   title: 'A receber',
                   value: 'R\$ ${Utils.parseToCurrency(provider.salesToReceive)}',
                   icon: Icons.payment,
-                  color: AppColors.warning,
+                  color: AppColors.tertiary,
                 ),
                 SummaryCard(
                   title: 'Vendas em aberto',

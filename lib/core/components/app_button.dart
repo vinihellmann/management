@@ -113,7 +113,7 @@ class _AppButtonState extends State<AppButton> {
         return FloatingActionButton(
           heroTag: null,
           tooltip: 'Salvar',
-          backgroundColor: AppColors.secondary,
+          backgroundColor: AppColors.tertiary,
           onPressed: _handlePress,
           child: Icon(Icons.done),
         );
@@ -122,7 +122,7 @@ class _AppButtonState extends State<AppButton> {
         return FloatingActionButton(
           heroTag: null,
           tooltip: 'Editar',
-          backgroundColor: AppColors.warning,
+          backgroundColor: AppColors.secondary,
           onPressed: _handlePress,
           child: Icon(Icons.edit),
         );

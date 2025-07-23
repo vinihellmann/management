@@ -13,6 +13,7 @@ class AppBaseDetailPage extends StatelessWidget {
   final List<Widget>? children;
   final Future<void> Function()? onEdit;
   final Future<void> Function()? onDelete;
+  final List<Widget>? options;
 
   const AppBaseDetailPage({
     super.key,
@@ -24,6 +25,7 @@ class AppBaseDetailPage extends StatelessWidget {
     this.children,
     required this.onEdit,
     required this.onDelete,
+    this.options,
   });
 
   @override
@@ -99,6 +101,7 @@ class AppBaseDetailPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          if (options != null) ...options!,
           if (onDelete != null)
             AppButton(type: AppButtonType.remove, onPressed: onDelete),
           if (onEdit != null)
