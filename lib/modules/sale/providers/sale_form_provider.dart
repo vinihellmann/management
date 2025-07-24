@@ -194,10 +194,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
     try {
       changeSaving();
 
-      if (model != null) {
-        await restorePreviousStock();
-      }
-
+      if (model != null) await restorePreviousStock();
       if (!await hasSufficientStock()) return false;
 
       final sale = SaleModel(
@@ -224,9 +221,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
         await repository.replaceItems(sale.id!, items);
       }
 
-      if (selectedStatus != SaleStatusEnum.canceled) {
-        await deductStock();
-      }
+      await deductStock();
 
       AppToastService.showSuccess('Registro salvo com sucesso');
       return true;

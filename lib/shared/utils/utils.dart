@@ -85,6 +85,31 @@ class Utils {
       ),
     );
   }
+  
+  static Future<bool?> showConfirmDialog(BuildContext context, String text) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirmar ação'),
+        content: Text(text),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          AppButton(
+            color: AppColors.lightError,
+            type: AppButtonType.outline,
+            text: 'Cancelar',
+            onPressed: () async => Navigator.pop(ctx, false),
+          ),
+          AppButton(
+            color: AppColors.secondary,
+            type: AppButtonType.outline,
+            text: 'Confirmar',
+            onPressed: () async => Navigator.pop(ctx, true),
+          ),
+        ],
+      ),
+    );
+  }
 
   static Color getStatusColor(SaleStatusEnum status, ThemeData theme) {
     switch (status) {

@@ -131,13 +131,19 @@ class SaleRepository extends BaseRepository<SaleModel> {
       args.add('%$customerName%');
     }
 
-    final initialDate = DateTime.tryParse(
-      filters['initialDate'],
-    )?.toIso8601String();
-    final finalDate = DateTime.tryParse(
-      filters['finalDate'],
-    )?.add(Duration(days: 1)).toIso8601String();
-    
+    final rawInitialDate = filters['initialDate'];
+    final rawFinalDate = filters['finalDate'];
+
+    final initialDate = (rawInitialDate is String && rawInitialDate.isNotEmpty)
+        ? DateTime.tryParse(rawInitialDate)?.toIso8601String()
+        : null;
+
+    final finalDate = (rawFinalDate is String && rawFinalDate.isNotEmpty)
+        ? DateTime.tryParse(
+            rawFinalDate,
+          )?.add(Duration(days: 1)).toIso8601String()
+        : null;
+
     if (initialDate != null && finalDate != null) {
       args.add(initialDate);
       args.add(finalDate);
@@ -300,5 +306,60 @@ class SaleRepository extends BaseRepository<SaleModel> {
       for (var row in result)
         (row['status'] as String): (row['total'] as num?)?.toDouble() ?? 0.0,
     };
+  }
+
+  Future<void> markAsSent(int saleId) async {
+    try {
+      await db.update(tableName, {'status': SaleStatusEnum.sent.name}, saleId);
+    } catch (e, stack) {
+      throw AppException(
+        'Erro ao marcar venda como enviada',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
+  }
+
+  Future<void> markAsCompleted(int saleId) async {
+    try {
+      await db.update(tableName, {
+        'status': SaleStatusEnum.completed.name,
+      }, saleId);
+    } catch (e, stack) {
+      throw AppException(
+        'Erro ao marcar venda como concluída',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
+  }
+
+  Future<void> markAsCanceled(int saleId) async {
+    try {
+      final items = await getItemsBySaleId(saleId);
+
+      for (final item in items) {
+        final unit = await db.rawQuery(
+          'SELECT stock FROM ${AppTableNames.productUnits} WHERE id = ?',
+          [item.unitId],
+        );
+
+        if (unit.isNotEmpty) {
+          final currentStock = (unit.first['stock'] as num?)?.toDouble() ?? 0.0;
+          final newStock = currentStock + (item.quantity ?? 0);
+          await updateUnitStock(item.unitId!, newStock);
+        }
+      }
+
+      await db.update(tableName, {
+        'status': SaleStatusEnum.canceled.name,
+      }, saleId);
+    } catch (e, stack) {
+      throw AppException(
+        'Erro ao cancelar a venda',
+        detail: e.toString(),
+        stackTrace: stack,
+      );
+    }
   }
 }

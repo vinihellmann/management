@@ -102,15 +102,33 @@ class _SaleDetailView extends StatelessWidget {
             icon: Icons.send,
             tooltip: 'Enviar',
             color: AppColors.tertiary,
-            onPressed: () async {},
+            onPressed: () async {
+              final result = await Utils.showConfirmDialog(
+                context,
+                'Deseja realmente marcar a venda como Enviada?',
+              );
+              if (result == true) {
+                await provider.markAsSent(sale.id!);
+                if (context.mounted) context.pop(true);
+              }
+            },
           ),
         if (showComplete)
           AppButton(
             type: AppButtonType.fab,
             icon: Icons.done,
-            tooltip: 'Completar',
-            color: AppColors.primary,
-            onPressed: () async {},
+            tooltip: 'Concluir',
+            color: AppColors.tertiary,
+            onPressed: () async {
+              final result = await Utils.showConfirmDialog(
+                context,
+                'Deseja realmente concluir a venda?',
+              );
+              if (result == true) {
+                await provider.markAsCompleted(sale.id!);
+                if (context.mounted) context.pop(true);
+              }
+            },
           ),
         if (showCancel)
           AppButton(
@@ -118,7 +136,16 @@ class _SaleDetailView extends StatelessWidget {
             icon: Icons.block,
             tooltip: 'Cancelar',
             color: Theme.of(context).colorScheme.error,
-            onPressed: () async {},
+            onPressed: () async {
+              final result = await Utils.showConfirmDialog(
+                context,
+                'Deseja realmente cancelar a venda?',
+              );
+              if (result == true) {
+                await provider.markAsCanceled(sale.id!);
+                if (context.mounted) context.pop(true);
+              }
+            },
           ),
       ],
       children: provider.items.isEmpty
