@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_section_form_card.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/providers/sale_form_provider.dart';
 import 'package:management/shared/utils/utils.dart';
 import 'package:provider/provider.dart';

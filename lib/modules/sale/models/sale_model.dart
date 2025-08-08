@@ -1,6 +1,39 @@
 import 'package:management/core/models/base_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+
+enum SaleStatusEnum {
+  open,
+  awaitingPayment,
+  confirmed,
+  sent,
+  canceled,
+  completed,
+}
+
+extension SaleStatusEnumExtension on SaleStatusEnum {
+  String get label {
+    switch (this) {
+      case SaleStatusEnum.open:
+        return 'Em Aberto';
+      case SaleStatusEnum.awaitingPayment:
+        return 'Aguardando pagamento';
+      case SaleStatusEnum.confirmed:
+        return 'Confirmada';
+      case SaleStatusEnum.sent:
+        return 'Enviada';
+      case SaleStatusEnum.canceled:
+        return 'Cancelada';
+      case SaleStatusEnum.completed:
+        return 'Concluída';
+    }
+  }
+
+  static List<SaleStatusEnum> get selectableValues => [
+    SaleStatusEnum.open,
+    SaleStatusEnum.awaitingPayment,
+    SaleStatusEnum.confirmed,
+  ];
+}
 
 class SaleModel extends BaseModel {
   int? customerId;

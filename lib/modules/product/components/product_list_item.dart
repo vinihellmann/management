@@ -107,7 +107,7 @@ class _ProductListItemState extends State<ProductListItem> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              '${currentUnit.name?.toUpperCase() ?? ''} • Estoque: ${Utils.parseToCurrency(currentUnit.stock!)}',
+                              '${currentUnit.name?.toUpperCase() ?? ''} • Estoque: ${currentUnit.stock}',
                             ),
                           ),
                           Container(

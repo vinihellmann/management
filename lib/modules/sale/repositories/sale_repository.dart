@@ -8,7 +8,6 @@ import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SaleRepository extends BaseRepository<SaleModel> {
@@ -249,7 +248,7 @@ class SaleRepository extends BaseRepository<SaleModel> {
     await insertItems(saleId, items);
   }
 
-  Future<void> updateUnitStock(int unitId, double newStock) async {
+  Future<void> updateUnitStock(int unitId, int newStock) async {
     await db.update(AppTableNames.productUnits, {'stock': newStock}, unitId);
   }
 
@@ -345,7 +344,7 @@ class SaleRepository extends BaseRepository<SaleModel> {
         );
 
         if (unit.isNotEmpty) {
-          final currentStock = (unit.first['stock'] as num?)?.toDouble() ?? 0.0;
+          final currentStock = unit.first['stock'].toInt();
           final newStock = currentStock + (item.quantity ?? 0);
           await updateUnitStock(item.unitId!, newStock);
         }

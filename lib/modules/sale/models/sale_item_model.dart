@@ -6,7 +6,7 @@ class SaleItemModel extends BaseModel {
   String? productName;
   int? unitId;
   String? unitName;
-  double? quantity;
+  int? quantity;
   double? unitPrice;
   double? subtotal;
 
@@ -55,7 +55,7 @@ class SaleItemModel extends BaseModel {
       productName: map['productName'] as String?,
       unitId: map['unitId'] as int?,
       unitName: map['unitName'] as String?,
-      quantity: (map['quantity'] as num?)?.toDouble(),
+      quantity: (map['quantity'] as num?)?.toInt(),
       unitPrice: (map['unitPrice'] as num?)?.toDouble(),
       subtotal: (map['subtotal'] as num?)?.toDouble(),
     );

@@ -15,7 +15,7 @@ class Migration0004CreateProductUnitsTable implements BaseMigration {
         productId INTEGER NOT NULL,
         name TEXT NOT NULL,
         price REAL NOT NULL,
-        stock REAL NOT NULL,
+        stock INTEGER NOT NULL,
         isDefault INTEGER NOT NULL DEFAULT 0,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL,

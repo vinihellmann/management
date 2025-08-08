@@ -50,6 +50,12 @@ class AppDrawer extends StatelessWidget {
                     current: currentRoute,
                   ),
                   _DrawerItem(
+                    label: 'Financeiro',
+                    icon: Icons.attach_money,
+                    route: AppRouteNames.finances,
+                    current: currentRoute,
+                  ),
+                  _DrawerItem(
                     label: 'Exportar Banco de Dados',
                     icon: Icons.save_alt_outlined,
                     route: 'export-db',

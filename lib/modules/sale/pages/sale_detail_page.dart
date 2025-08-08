@@ -7,7 +7,6 @@ import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/modules/sale/providers/sale_detail_provider.dart';
 import 'package:management/shared/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -202,7 +201,7 @@ class _SaleDetailView extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Text(
-                              'Qtd: ${Utils.parseToCurrency(item.quantity!)} | '
+                              'Qtd: ${item.quantity} | '
                               'V. Unit: R\$ ${Utils.parseToCurrency(item.unitPrice!)}',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),

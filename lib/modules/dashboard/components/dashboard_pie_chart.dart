@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/shared/utils/utils.dart';
 
 class DashboardPieChart extends StatelessWidget {
@@ -50,7 +50,7 @@ class DashboardPieChart extends StatelessWidget {
                 return PieChartSectionData(
                   value: entry.value,
                   title: '${status.label}\n$percent%',
-                  color: Utils.getStatusColor(status, theme),
+                  color: Utils.getSaleStatusColor(status, theme),
                   radius: 60,
                   titleStyle: const TextStyle(
                     fontSize: 12,

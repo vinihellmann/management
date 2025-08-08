@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/core/themes/app_colors.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:management/modules/finance/models/finance_model.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -61,6 +62,22 @@ class Utils {
         .text;
   }
 
+  static String? parseToStock(double value) {
+    bool isInteger = value == value.roundToDouble();
+
+    return CurrencyInputFormatter(
+          thousandSeparator: ThousandSeparator.Period,
+          mantissaLength: isInteger ? 0 : 2,
+        )
+        .formatEditUpdate(
+          TextEditingValue.empty,
+          TextEditingValue(
+            text: isInteger ? value.toStringAsFixed(0) : value.toString(),
+          ),
+        )
+        .text;
+  }
+
   static Future<bool?> showDeleteDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -85,8 +102,11 @@ class Utils {
       ),
     );
   }
-  
-  static Future<bool?> showConfirmDialog(BuildContext context, String text) async {
+
+  static Future<bool?> showConfirmDialog(
+    BuildContext context,
+    String text,
+  ) async {
     return await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -111,7 +131,7 @@ class Utils {
     );
   }
 
-  static Color getStatusColor(SaleStatusEnum status, ThemeData theme) {
+  static Color getSaleStatusColor(SaleStatusEnum status, ThemeData theme) {
     switch (status) {
       case SaleStatusEnum.open:
         return Colors.blue;
@@ -124,6 +144,17 @@ class Utils {
       case SaleStatusEnum.completed:
         return theme.colorScheme.secondary;
       case SaleStatusEnum.canceled:
+        return theme.colorScheme.error;
+    }
+  }
+
+  static Color getFinanceStatusColor(FinanceStatusEnum status, ThemeData theme) {
+    switch (status) {
+      case FinanceStatusEnum.pending:
+        return Colors.blue;
+      case FinanceStatusEnum.confirmed:
+        return AppColors.tertiary;
+      case FinanceStatusEnum.canceled:
         return theme.colorScheme.error;
     }
   }

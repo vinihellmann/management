@@ -43,7 +43,7 @@ class ProductFormProvider
               text: Utils.parseToCurrency(u.price!),
             ),
             stockController: TextEditingController(
-              text: Utils.parseToCurrency(u.stock!),
+              text: u.stock!.toString(),
             ),
           );
         }).toList();
@@ -129,7 +129,7 @@ class ProductFormProvider
           code: entry.unit.code,
           name: entry.nameController.text.trim(),
           price: Utils.parseToDouble(entry.priceController.text),
-          stock: Utils.parseToDouble(entry.stockController.text),
+          stock: int.parse(entry.stockController.text),
           isDefault: entry.unit.isDefault,
           createdAt: entry.unit.createdAt,
         );

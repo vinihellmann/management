@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_layout.dart';
 import 'package:management/core/components/app_section_description.dart';
+import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/router/app_router.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/dashboard/components/dashboard_pie_chart.dart';
@@ -78,24 +79,30 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
                   value: '${provider.totalCustomers}',
                   icon: Icons.people,
                   color: AppColors.primary,
+                  route: AppRouteNames.customers,
                 ),
                 SummaryCard(
                   title: 'Vendas do mês',
-                  value: 'R\$ ${Utils.parseToCurrency(provider.salesThisMonth)}',
+                  value:
+                      'R\$ ${Utils.parseToCurrency(provider.salesThisMonth)}',
                   icon: Icons.attach_money,
                   color: AppColors.secondary,
+                  route: AppRouteNames.finances,
                 ),
                 SummaryCard(
                   title: 'A receber',
-                  value: 'R\$ ${Utils.parseToCurrency(provider.salesToReceive)}',
+                  value:
+                      'R\$ ${Utils.parseToCurrency(provider.salesToReceive)}',
                   icon: Icons.payment,
                   color: AppColors.tertiary,
+                  route: AppRouteNames.finances,
                 ),
                 SummaryCard(
                   title: 'Vendas em aberto',
                   value: '${provider.salesOpenCount}',
                   icon: Icons.shopping_bag,
                   color: AppColors.lightError,
+                  route: AppRouteNames.sales,
                 ),
               ],
             ),

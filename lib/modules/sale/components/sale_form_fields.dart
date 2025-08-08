@@ -3,7 +3,7 @@ import 'package:management/core/components/app_section_form_Card.dart';
 import 'package:management/core/components/app_select.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/modules/sale/components/sale_form_customer_card.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/providers/sale_form_provider.dart';
 import 'package:provider/provider.dart';
 

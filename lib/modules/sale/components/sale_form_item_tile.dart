@@ -53,7 +53,7 @@ class SaleFormItemTile extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      '${item.productName?.toUpperCase()} (${item.unitName})',
+                      '${item.productName?.toUpperCase()}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
@@ -75,7 +75,7 @@ class SaleFormItemTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Qtd: ${Utils.parseToCurrency(item.quantity ?? 0)}',
+                    'Qtd: ${item.quantity} ${item.unitName?.toUpperCase()}',
                     style: theme.textTheme.bodySmall,
                   ),
                   Text(

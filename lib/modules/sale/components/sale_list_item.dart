@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/shared/utils/utils.dart';
 
 class SaleListItem extends StatelessWidget {
@@ -12,7 +11,7 @@ class SaleListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final statusColor = Utils.getStatusColor(sale.status, theme);
+    final statusColor = Utils.getSaleStatusColor(sale.status, theme);
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),

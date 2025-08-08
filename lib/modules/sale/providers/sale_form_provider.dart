@@ -5,16 +5,18 @@ import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_form_provider.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
+import 'package:management/modules/finance/repositories/finance_repository.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
 import 'package:management/modules/sale/repositories/sale_repository.dart';
 import 'package:management/shared/utils/utils.dart';
 
 class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
-  SaleFormProvider(super.repository);
+  SaleFormProvider(super.repository, this.financeRepository);
+
+  final FinanceRepository financeRepository;
 
   final discountPercentageController = TextEditingController();
   final discountValueController = TextEditingController();
@@ -142,7 +144,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
       final (product, unit) = await getProductAndUnit(item);
       if (item.quantity! > unit.stock!) {
         AppToastService.showError(
-          'Estoque insuficiente (${Utils.parseToCurrency(unit.stock!)}) para o item ${product.name!.toUpperCase()} (${unit.name!.toUpperCase()})',
+          'Estoque insuficiente (${unit.stock}) para o item ${product.name!.toUpperCase()} (${unit.name!.toUpperCase()})',
         );
         return false;
       }
@@ -222,6 +224,11 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
       }
 
       await deductStock();
+      await financeRepository.syncWithSale(
+        sale.id,
+        sale.totalSale!,
+        sale.customerName!,
+      );
 
       AppToastService.showSuccess('Registro salvo com sucesso');
       return true;

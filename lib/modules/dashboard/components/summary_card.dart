@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SummaryCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color color;
+  final String route;
 
   const SummaryCard({
     super.key,
@@ -12,44 +14,49 @@ class SummaryCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
+    required this.route,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      width: MediaQuery.of(context).size.width / 2 - 24,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: color.withAlpha(25),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
+    return InkWell(
+      onTap: () => context.pushNamed(route),
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 24,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 2),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: color.withAlpha(25),
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(title, style: theme.textTheme.bodyMedium),
+          ],
+        ),
       ),
     );
   }

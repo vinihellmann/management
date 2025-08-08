@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:management/modules/customer/repositories/customer_repository.dart';
-import 'package:management/modules/sale/models/sale_status_enum.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:management/modules/sale/repositories/sale_repository.dart';
 
 class DashboardProvider extends ChangeNotifier {

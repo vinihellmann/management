@@ -97,7 +97,7 @@ class _SaleListView extends StatelessWidget {
             const Expanded(child: Center(child: AppLoader()))
           else if (sales.isEmpty)
             const Expanded(
-              child: Center(child: Text('Nenhuma venda encontrada')),
+              child: Center(child: Text('Nenhum registro encontrado')),
             )
           else
             Expanded(

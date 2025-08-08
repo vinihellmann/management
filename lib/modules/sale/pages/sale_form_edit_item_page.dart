@@ -42,13 +42,13 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
 
     final initialPrice =
         widget.saleItem?.unitPrice ?? units[currentUnitIndex].price ?? 0.0;
-    final initialQuantity = widget.saleItem?.quantity ?? 1.0;
+    final initialQuantity = widget.saleItem?.quantity ?? 1;
 
     priceController = TextEditingController(
       text: Utils.parseToCurrency(initialPrice),
     );
     quantityController = TextEditingController(
-      text: Utils.parseToCurrency(initialQuantity),
+      text: initialQuantity.toString(),
     );
 
     priceController.addListener(calculateSubtotal);
@@ -69,7 +69,7 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
 
   void calculateSubtotal() {
     final price = Utils.parseToDouble(priceController.text)!;
-    final quantity = Utils.parseToDouble(quantityController.text)!;
+    final quantity = int.tryParse(quantityController.text) ?? 0;
     setState(() {
       subtotal = price * quantity;
     });
@@ -132,7 +132,6 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
                 TextFormField(
                   controller: quantityController,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [InputFormatters.currencyMask],
                   decoration: const InputDecoration(
                     labelText: 'Quantidade',
                     prefixIcon: Icon(Icons.confirmation_number_outlined),
@@ -163,8 +162,8 @@ class _SaleFormEditItemPageState extends State<SaleFormEditItemPage> {
         type: AppButtonType.save,
         onPressed: () async {
           final price = Utils.parseToDouble(priceController.text);
-          final quantity = Utils.parseToDouble(quantityController.text);
-          final subtotal = price! * quantity!;
+          final quantity = int.parse(quantityController.text);
+          final subtotal = price! * quantity;
 
           final unit = currentUnit;
 

@@ -17,7 +17,7 @@ class Migration0006CreateSaleItemsTable implements BaseMigration {
         productName TEXT NOT NULL,
         unitId INTEGER NOT NULL,
         unitName TEXT NOT NULL,
-        quantity REAL NOT NULL,
+        quantity INTEGER NOT NULL,
         unitPrice REAL NOT NULL,
         subtotal REAL NOT NULL,
         createdAt TEXT NOT NULL,

@@ -4,7 +4,7 @@ class ProductUnitModel extends BaseModel {
   int? productId;
   String? name;
   double? price;
-  double? stock;
+  int? stock;
   bool isDefault;
 
   ProductUnitModel({
@@ -42,7 +42,7 @@ class ProductUnitModel extends BaseModel {
       productId: map['productId'],
       name: map['name'],
       price: (map['price'] as num?)?.toDouble(),
-      stock: (map['stock'] as num?)?.toDouble(),
+      stock: (map['stock'] as num?)?.toInt(),
       isDefault: map['isDefault'] == 1,
       createdAt: DateTime.tryParse(map['createdAt']),
       updatedAt: DateTime.tryParse(map['updatedAt']),
@@ -54,7 +54,7 @@ class ProductUnitModel extends BaseModel {
     String? code,
     String? name,
     double? price,
-    double? stock,
+    int? stock,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {

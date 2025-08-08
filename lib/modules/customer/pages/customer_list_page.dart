@@ -98,7 +98,7 @@ class _CustomerListView extends StatelessWidget {
             const Expanded(child: Center(child: AppLoader()))
           else if (customers.isEmpty)
             const Expanded(
-              child: Center(child: Text('Nenhum cliente encontrado')),
+              child: Center(child: Text('Nenhum registro encontrado')),
             )
           else
             Expanded(

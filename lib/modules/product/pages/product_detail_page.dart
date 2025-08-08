@@ -109,7 +109,7 @@ class _ProductDetailView extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Text(
-                              'Estoque: ${Utils.parseToCurrency(u.stock!)}',
+                              'Estoque: ${u.stock}',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],

@@ -1,12 +1,13 @@
 import 'package:management/core/models/base_filters.dart';
-import 'package:management/modules/sale/models/sale_model.dart';
+import 'package:management/modules/finance/models/finance_model.dart';
 
-class SaleFilters extends BaseFilters {
+class FinanceFilters extends BaseFilters {
   String? code;
   String? customerName;
   DateTime? initialDate;
   DateTime? finalDate;
-  SaleStatusEnum? status;
+  FinanceTypeEnum? type;
+  FinanceStatusEnum? status;
 
   @override
   void clear() {
@@ -14,6 +15,7 @@ class SaleFilters extends BaseFilters {
     customerName = null;
     initialDate = null;
     finalDate = null;
+    type = null;
     status = null;
   }
 
@@ -24,6 +26,7 @@ class SaleFilters extends BaseFilters {
       if (customerName?.isNotEmpty == true) 'customerName': customerName,
       if (initialDate != null) 'initialDate': initialDate!.toIso8601String(),
       if (finalDate != null) 'finalDate': finalDate!.toIso8601String(),
+      if (type != null) 'type': type!.name,
       if (status != null) 'status': status!.name,
     };
   }
@@ -42,6 +45,9 @@ class SaleFilters extends BaseFilters {
         break;
       case 'finalDate':
         finalDate = value;
+        break;
+      case 'type':
+        type = value;
         break;
       case 'status':
         status = value;
