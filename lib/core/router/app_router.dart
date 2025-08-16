@@ -7,6 +7,8 @@ import 'package:management/modules/customer/pages/customer_form_page.dart';
 import 'package:management/modules/customer/pages/customer_list_page.dart';
 import 'package:management/modules/customer/pages/customer_select_page.dart';
 import 'package:management/modules/dashboard/pages/dashboard_page.dart';
+import 'package:management/modules/finance/models/finance_model.dart';
+import 'package:management/modules/finance/pages/finance_detail_page.dart';
 import 'package:management/modules/finance/pages/finance_list_page.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/pages/product_detail_page.dart';
@@ -122,6 +124,14 @@ class AppRouter {
         path: AppRouteNames.finances,
         name: AppRouteNames.finances,
         builder: (context, state) => const FinanceListPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.financeDetail,
+        name: AppRouteNames.financeDetail,
+        builder: (context, state) {
+          final extra = state.extra as FinanceModel;
+          return FinanceDetailPage(finance: extra);
+        },
       ),
     ],
   );

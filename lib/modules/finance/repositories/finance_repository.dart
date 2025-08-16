@@ -2,6 +2,7 @@ import 'package:management/core/constants/app_table_names.dart';
 import 'package:management/core/models/base_repository.dart';
 import 'package:management/core/services/app_database_service.dart';
 import 'package:management/modules/finance/models/finance_model.dart';
+import 'package:management/modules/sale/models/sale_model.dart';
 
 class FinanceRepository extends BaseRepository<FinanceModel> {
   FinanceRepository(AppDatabaseService db) : super(db, AppTableNames.finances);
@@ -9,6 +10,10 @@ class FinanceRepository extends BaseRepository<FinanceModel> {
   @override
   FinanceModel fromMap(Map<String, dynamic> map) {
     return FinanceModel().fromMap(map);
+  }
+
+  SaleModel fromSaleMap(Map<String, dynamic> map) {
+    return SaleModel().fromMap(map);
   }
 
   @override
@@ -75,31 +80,31 @@ class FinanceRepository extends BaseRepository<FinanceModel> {
     return args;
   }
 
-  Future<void> syncWithSale(
-    int? saleCode,
-    double total,
-    String customerName,
-  ) async {
-    final result = await db.rawQuery(
-      'SELECT id FROM $tableName WHERE saleCode = ?',
-      [saleCode],
-    );
+  Future<void> createBySale(int saleId) async {
+    final saleQuery = await db.rawQuery("SELECT * FROM ${AppTableNames.sales} WHERE id = ?", [saleId]);
+    if (saleQuery.isEmpty) return;
 
-    if (result.isEmpty) {
-      await db.insert(tableName, {
-        'saleCode': saleCode,
-        'customerName': customerName,
-        'value': total,
-        'type': FinanceTypeEnum.receivable.name,
-        'status': FinanceStatusEnum.pending.name,
-      });
-    } else {
-      final id = result.first['id'] as int;
-      await db.update(tableName, {
-        'value': total,
-        'customerName': customerName,
-        'status': FinanceStatusEnum.pending.name,
-      }, id);
-    }
+    final sale = fromSaleMap(saleQuery.first);
+
+    await db.insert(tableName, {
+      'saleCode': sale.code,
+      'value': sale.totalSale,
+      'customerName': sale.customerName,
+      'type': FinanceTypeEnum.receivable.name,
+      'status': FinanceStatusEnum.pending.name,
+    });
+  }
+
+  Future<void> updateBySale(SaleModel sale) async {
+    final financeQuery = await db.rawQuery('SELECT id FROM $tableName WHERE saleCode = ?', [sale.code]);
+    if (financeQuery.isEmpty) return;
+
+    final finance = fromMap(financeQuery.first);
+
+    await db.update(tableName, {
+      'value': sale.totalSale,
+      'customerName': sale.customerName,
+      'status': FinanceStatusEnum.pending.name,
+    }, finance.id!);
   }
 }

@@ -217,18 +217,19 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
 
       if (model == null) {
         final saleId = await repository.insert(sale);
-        await repository.insertItems(saleId, items);
+        await Future.wait([
+          repository.insertItems(saleId, items),
+          financeRepository.createBySale(saleId),
+        ]);
       } else {
-        await repository.update(sale);
-        await repository.replaceItems(sale.id!, items);
+        await Future.wait([
+          repository.update(sale),
+          repository.replaceItems(sale.id!, items),
+          financeRepository.updateBySale(sale),
+        ]);
       }
 
       await deductStock();
-      await financeRepository.syncWithSale(
-        sale.id,
-        sale.totalSale!,
-        sale.customerName!,
-      );
 
       AppToastService.showSuccess('Registro salvo com sucesso');
       return true;
