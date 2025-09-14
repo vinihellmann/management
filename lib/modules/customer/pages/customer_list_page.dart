@@ -60,7 +60,7 @@ class _CustomerListView extends StatelessWidget {
             },
             filterContent: [
               DropdownButtonFormField<String>(
-                value: provider.orderBy,
+                initialValue: provider.orderBy,
                 decoration: const InputDecoration(labelText: 'Ordenar por'),
                 items: const [
                   DropdownMenuItem(

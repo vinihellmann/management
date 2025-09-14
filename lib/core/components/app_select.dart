@@ -29,7 +29,7 @@ class AppSelect<T> extends StatelessWidget {
         Text(label),
         const SizedBox(height: 6),
         DropdownButtonFormField(
-          value: value,
+          initialValue: value,
           onChanged: onChanged,
           items: items,
           validator: isRequired ? _isRequired : null,
