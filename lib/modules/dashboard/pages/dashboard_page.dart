@@ -5,6 +5,7 @@ import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/core/router/app_router.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/dashboard/components/dashboard_pie_chart.dart';
+import 'package:management/modules/dashboard/components/logged_user_card.dart';
 import 'package:management/modules/dashboard/components/summary_Card.dart';
 import 'package:management/modules/dashboard/providers/dashboard_provider.dart';
 import 'package:management/shared/utils/utils.dart';
@@ -69,6 +70,8 @@ class _DashboardViewState extends State<_DashboardView> with RouteAware {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const LoggedUserCard(),
+            const SizedBox(height: 12),
             const AppSectionDescription(description: 'Visão Geral'),
             Wrap(
               spacing: 16,
