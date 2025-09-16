@@ -1,4 +1,8 @@
 class AppRouteNames {
+  static const String splash = '/splash';
+
+  static const String login = '/login';
+
   static const String dashboard = '/';
 
   static const String customers = '/customers';
@@ -15,8 +19,4 @@ class AppRouteNames {
   static const String saleForm = '/sales/form';
   static const String saleFormEditItem = '/sales/form/edit-item';
   static const String saleDetail = '/sales/detail';
-
-  static const String finances = '/finances';
-  static const String financeForm = '/finances/form';
-  static const String financeDetail = '/finances/detail';
 }

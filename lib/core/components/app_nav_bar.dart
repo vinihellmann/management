@@ -7,7 +7,7 @@ class AppNavBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final VoidCallback? onBack;
   final Widget? leading;
-  final List<Widget>? actions;
+  final bool withDrawer;
 
   const AppNavBar({
     super.key,
@@ -15,7 +15,7 @@ class AppNavBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBack = true,
     this.onBack,
     this.leading,
-    this.actions,
+    this.withDrawer = false,
   });
 
   @override
@@ -32,7 +32,16 @@ class AppNavBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: Text(title, style: AppTextStyles.headlineMedium),
       leading: showBack && canPop ? backIcon : leading,
-      actions: [...?actions],
+      actions: withDrawer
+          ? [
+              IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+                icon: Icon(Icons.menu_open),
+              ),
+            ]
+          : null,
     );
   }
 

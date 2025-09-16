@@ -7,7 +7,6 @@ import 'package:management/core/database/migrations/migration_0003_create_produc
 import 'package:management/core/database/migrations/migration_0004_create_product_units_table.dart';
 import 'package:management/core/database/migrations/migration_0005_create_sales_table.dart';
 import 'package:management/core/database/migrations/migration_0006_create_sale_items_table.dart';
-import 'package:management/core/database/migrations/migration_0007_create_finances_table.dart';
 import 'package:management/core/models/base_migration.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -66,7 +65,6 @@ class AppDatabase {
       Migration0004CreateProductUnitsTable(),
       Migration0005CreateSalesTable(),
       Migration0006CreateSaleItemsTable(),
-      Migration0007CreateFinancesTable(),
     ];
 
     for (final migration in allMigrations) {

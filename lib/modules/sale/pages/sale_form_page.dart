@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
-import 'package:management/modules/finance/repositories/finance_repository.dart';
 import 'package:management/modules/sale/components/sale_form_fields.dart';
 import 'package:management/modules/sale/components/sale_form_items_tab.dart';
 import 'package:management/modules/sale/components/sale_form_summary_tab.dart';
@@ -21,10 +20,8 @@ class SaleFormPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => SaleFormProvider(
-            context.read<SaleRepository>(),
-            context.read<FinanceRepository>(),
-          )..loadData(sale),
+          create: (_) =>
+              SaleFormProvider(context.read<SaleRepository>())..loadData(sale),
         ),
       ],
       child: _SaleFormView(),

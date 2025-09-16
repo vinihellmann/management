@@ -1,15 +1,15 @@
+// lib/core/router/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/modules/auth/controllers/auth_controller.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/pages/customer_detail_page.dart';
 import 'package:management/modules/customer/pages/customer_form_page.dart';
 import 'package:management/modules/customer/pages/customer_list_page.dart';
 import 'package:management/modules/customer/pages/customer_select_page.dart';
 import 'package:management/modules/dashboard/pages/dashboard_page.dart';
-import 'package:management/modules/finance/models/finance_model.dart';
-import 'package:management/modules/finance/pages/finance_detail_page.dart';
-import 'package:management/modules/finance/pages/finance_list_page.dart';
+import 'package:management/modules/login/pages/login_page.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/pages/product_detail_page.dart';
 import 'package:management/modules/product/pages/product_form_page.dart';
@@ -23,12 +23,30 @@ import 'package:management/modules/sale/pages/sale_form_page.dart';
 import 'package:management/modules/sale/pages/sale_list_page.dart';
 
 class AppRouter {
+  AppRouter(this.auth);
+
+  final AuthController auth;
+
   static final routerObserver = RouteObserver<PageRoute>();
 
-  static final GoRouter router = GoRouter(
-    initialLocation: AppRouteNames.dashboard,
+  late final GoRouter router = GoRouter(
     observers: [routerObserver],
+    initialLocation: AppRouteNames.dashboard,
+    refreshListenable: auth,
+    redirect: (context, state) {
+      final loggedIn = auth.isLoggedIn;
+      final goingToLogin = state.matchedLocation == AppRouteNames.login;
+
+      if (!loggedIn && !goingToLogin) return AppRouteNames.login;
+      if (loggedIn && goingToLogin) return AppRouteNames.dashboard;
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: AppRouteNames.login,
+        name: AppRouteNames.login,
+        builder: (context, state) => const LoginPage(),
+      ),
       GoRoute(
         path: AppRouteNames.dashboard,
         name: AppRouteNames.dashboard,
@@ -112,25 +130,11 @@ class AppRouter {
         name: AppRouteNames.saleFormEditItem,
         builder: (context, state) {
           final extra = state.extra;
-
           if (extra is ProductModel) {
             return SaleFormEditItemPage(product: extra);
           } else {
             return SaleFormEditItemPage(saleItem: extra as SaleItemModel);
           }
-        },
-      ),
-      GoRoute(
-        path: AppRouteNames.finances,
-        name: AppRouteNames.finances,
-        builder: (context, state) => const FinanceListPage(),
-      ),
-      GoRoute(
-        path: AppRouteNames.financeDetail,
-        name: AppRouteNames.financeDetail,
-        builder: (context, state) {
-          final extra = state.extra as FinanceModel;
-          return FinanceDetailPage(finance: extra);
         },
       ),
     ],

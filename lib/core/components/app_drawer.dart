@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_asset_names.dart';
 import 'package:management/core/constants/app_route_names.dart';
-import 'package:management/shared/utils/utils.dart';
+import 'package:management/modules/auth/controllers/auth_controller.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -11,6 +12,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.toString();
+    final auth = context.read<AuthController>();
     final theme = Theme.of(context);
 
     return SafeArea(
@@ -48,24 +50,41 @@ class AppDrawer extends StatelessWidget {
                     icon: Icons.shopping_bag_outlined,
                     route: AppRouteNames.sales,
                     current: currentRoute,
-                  ),
-                  _DrawerItem(
-                    label: 'Financeiro',
-                    icon: Icons.attach_money,
-                    route: AppRouteNames.finances,
-                    current: currentRoute,
-                  ),
-                  _DrawerItem(
-                    label: 'Exportar Banco de Dados',
-                    icon: Icons.save_alt_outlined,
-                    route: 'export-db',
-                    current: '',
-                    onTap: () async {
+                    onTap: () {
                       Navigator.of(context).pop();
-                      await Utils.exportDatabase(context);
+                      context.pushNamed(AppRouteNames.sales);
                     },
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Material(
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.error.withAlpha(50),
+                child: ListTile(
+                  selectedTileColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  leading: Icon(
+                    Icons.exit_to_app,
+                    color: theme.colorScheme.error,
+                  ),
+                  title: Text(
+                    'Sair',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.normal,
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                  onTap: () => auth.signOut(),
+                ),
               ),
             ),
           ],

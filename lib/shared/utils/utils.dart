@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/core/themes/app_colors.dart';
-import 'package:management/modules/finance/models/finance_model.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -144,17 +143,6 @@ class Utils {
       case SaleStatusEnum.completed:
         return theme.colorScheme.secondary;
       case SaleStatusEnum.canceled:
-        return theme.colorScheme.error;
-    }
-  }
-
-  static Color getFinanceStatusColor(FinanceStatusEnum status, ThemeData theme) {
-    switch (status) {
-      case FinanceStatusEnum.pending:
-        return Colors.blue;
-      case FinanceStatusEnum.confirmed:
-        return AppColors.tertiary;
-      case FinanceStatusEnum.canceled:
         return theme.colorScheme.error;
     }
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_drawer.dart';
-import 'package:management/core/components/app_drawer_controller.dart';
-import 'package:management/core/components/app_drawer_toggle_button.dart';
 import 'package:management/core/components/app_nav_bar.dart';
 import 'package:management/core/components/app_theme_toggle_button.dart';
 
@@ -25,20 +23,15 @@ class AppLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawerState = AppDrawerController.of(context);
-
     return Scaffold(
       appBar: AppNavBar(
         title: title,
         showBack: showBack,
         onBack: onBack,
         leading: const AppThemeToggleButton(),
-        actions: withDrawer
-            ? [AppDrawerToggleButton(drawerState: drawerState)]
-            : null,
+        withDrawer: withDrawer,
       ),
       endDrawerEnableOpenDragGesture: true,
-      onEndDrawerChanged: drawerState.setDrawerOpen,
       endDrawer: withDrawer ? const AppDrawer() : null,
       body: body,
       floatingActionButton: floatingActionButton,

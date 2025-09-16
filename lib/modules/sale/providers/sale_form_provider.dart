@@ -5,7 +5,6 @@ import 'package:management/core/models/app_exception.dart';
 import 'package:management/core/models/base_form_provider.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
-import 'package:management/modules/finance/repositories/finance_repository.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/models/product_unit_model.dart';
 import 'package:management/modules/sale/models/sale_item_model.dart';
@@ -14,9 +13,7 @@ import 'package:management/modules/sale/repositories/sale_repository.dart';
 import 'package:management/shared/utils/utils.dart';
 
 class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
-  SaleFormProvider(super.repository, this.financeRepository);
-
-  final FinanceRepository financeRepository;
+  SaleFormProvider(super.repository);
 
   final discountPercentageController = TextEditingController();
   final discountValueController = TextEditingController();
@@ -66,8 +63,7 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
         paymentCondition = model.paymentCondition!;
         selectedStatus = model.status;
 
-        discountPercentageController.text =
-            model.discountPercentage?.toString() ?? '';
+        discountPercentageController.text = model.discountPercentage?.toString() ?? '';
         discountValueController.text = model.discountValue?.toString() ?? '';
         totalItemsController.text = model.totalProducts?.toString() ?? '';
         totalSaleController.text = model.totalSale?.toString() ?? '';
@@ -217,15 +213,11 @@ class SaleFormProvider extends BaseFormProvider<SaleModel, SaleRepository> {
 
       if (model == null) {
         final saleId = await repository.insert(sale);
-        await Future.wait([
-          repository.insertItems(saleId, items),
-          financeRepository.createBySale(saleId),
-        ]);
+        await repository.insertItems(saleId, items);
       } else {
         await Future.wait([
           repository.update(sale),
-          repository.replaceItems(sale.id!, items),
-          financeRepository.updateBySale(sale),
+          repository.replaceItems(sale.id!, items)
         ]);
       }
 

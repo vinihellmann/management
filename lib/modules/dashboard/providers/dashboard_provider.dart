@@ -16,6 +16,7 @@ class DashboardProvider extends ChangeNotifier {
   Map<String, double> salesByStatusMap = {};
 
   bool isLoading = false;
+  bool _disposed = false;
 
   Future<void> loadData() async {
     isLoading = true;
@@ -44,7 +45,15 @@ class DashboardProvider extends ChangeNotifier {
 
     salesByStatusMap = await saleRepository.getSumByStatus();
 
-    isLoading = false;
-    notifyListeners();
+    if (!_disposed) {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

@@ -7,5 +7,4 @@ class AppTableNames {
   static const String productUnits = 'product_units';
   static const String sales = 'sales';
   static const String saleItems = 'sale_items';
-  static const String finances = 'finances';
 }
