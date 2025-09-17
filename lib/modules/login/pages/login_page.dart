@@ -21,6 +21,7 @@ class _LoginPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<LoginController>();
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -86,32 +87,77 @@ class _LoginPageView extends StatelessWidget {
                               );
                             },
                           ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            height: 48,
-                            child: FilledButton(
-                              onPressed: ctrl.isLoading
-                                  ? null
-                                  : () async => await ctrl.signIn(),
-                              child: ctrl.isLoading
-                                  ? const SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Text('Acessar'),
+                          const SizedBox(height: 5),
+                          if (ctrl.isLoading) ...[
+                            const SizedBox(height: 25),
+                            Center(
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: Alignment.center,
-                            child: TextButton(
-                              onPressed: ctrl.resetPassword,
-                              child: const Text('Esqueci minha senha'),
+                          ] else ...[
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: ctrl.resetPassword,
+                                child: const Text('Esqueci minha senha'),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              height: 48,
+                              child: FilledButton(
+                                onPressed: () async => await ctrl.signIn(),
+                                child: const Text('Acessar'),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: theme.dividerColor.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text(
+                                    'ou',
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    color: theme.dividerColor.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              height: 48,
+                              child: OutlinedButton.icon(
+                                onPressed: () async =>
+                                    await ctrl.signInWithGoogle(),
+                                icon: Image.asset(
+                                  AppAssetNames.googleLogoPath,
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                label: Text(
+                                  'Entrar com Google',
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 6),
                         ],
                       ),
                     ),

@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/auth/controllers/auth_controller.dart';
 
@@ -43,6 +46,25 @@ class LoginController extends ChangeNotifier {
       AppToastService.showError(mapFirebaseError(e));
     } catch (_) {
       AppToastService.showError('Falha inesperada. Tente novamente.');
+    } finally {
+      _setIsLoading(false);
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    _setIsLoading(true);
+    try {
+      await _authController.signInWithGoogle();
+    } on FirebaseAuthException catch (e) {
+      log(e.toString());
+      AppToastService.showError(mapFirebaseError(e));
+    } on GoogleSignInException catch (e) {
+      log(e.toString());
+      if (e.code == GoogleSignInExceptionCode.canceled) return;
+      AppToastService.showError(e.description.toString());
+    } catch (e) {
+      log(e.toString());
+      AppToastService.showError('Falha ao entrar com Google. Tente novamente.');
     } finally {
       _setIsLoading(false);
     }

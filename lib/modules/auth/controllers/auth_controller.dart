@@ -52,6 +52,13 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> signInWithGoogle() async {
+    await _service.signInWithGoogle();
+    _user = _service.currentUser;
+    _sessionValid = await _service.isSessionValid;
+    notifyListeners();
+  }
+
   Future<void> resetPassword(String email) async {
     await _service.resetPassword(email: email);
   }
