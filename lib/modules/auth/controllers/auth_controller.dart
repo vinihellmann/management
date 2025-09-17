@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:management/core/services/app_auth_service.dart';
+import 'package:management/modules/auth/models/auth_session.dart';
 
 class AuthController extends ChangeNotifier {
   AuthController(this._service);
@@ -10,51 +11,48 @@ class AuthController extends ChangeNotifier {
   final AppAuthService _service;
 
   StreamSubscription<User?>? _sub;
-  Timer? _sessionWatchdog;
 
   User? _user;
+  AuthSession? _session;
   bool _sessionValid = false;
 
   User? get user => _user;
+  AuthSession? get session => _session;
   bool get isLoggedIn => _user != null && _sessionValid;
 
+  String? get tenantId => _session?.tenant.tenantId;
+  String? get tenantName => _session?.tenant.name;
+  DateTime? get licenseUntil => _session?.tenant.licenseUntil;
+
   Future<void> init() async {
+    await _service.init();
+
     _user = _service.currentUser;
+    _session = _service.authSession;
     _sessionValid = await _service.isSessionValid;
 
     _sub = _service.onAuthStateChanged.listen((u) async {
       _user = u;
       _sessionValid = await _service.isSessionValid;
+      _session = _service.authSession;
       notifyListeners();
-    });
-
-    _sessionWatchdog?.cancel();
-    _sessionWatchdog = Timer.periodic(const Duration(seconds: 30), (_) async {
-      if (_service.currentUser != null) {
-        await _service.ensureSessionValidity();
-      }
-      
-      final newValid = await _service.isSessionValid;
-      if (newValid != _sessionValid || _service.currentUser != _user) {
-        _user = _service.currentUser;
-        _sessionValid = newValid;
-        notifyListeners();
-      }
     });
 
     notifyListeners();
   }
 
   Future<void> signIn(String email, String password) async {
-    await _service.signIn(email: email, password: password);
+    final authSession = await _service.signIn(email: email, password: password);
     _user = _service.currentUser;
+    _session = authSession;
     _sessionValid = await _service.isSessionValid;
     notifyListeners();
   }
 
   Future<void> signInWithGoogle() async {
-    await _service.signInWithGoogle();
+    final authSession = await _service.signInWithGoogle();
     _user = _service.currentUser;
+    _session = authSession;
     _sessionValid = await _service.isSessionValid;
     notifyListeners();
   }
@@ -66,6 +64,7 @@ class AuthController extends ChangeNotifier {
   Future<void> signOut() async {
     await _service.signOut();
     _user = null;
+    _session = null;
     _sessionValid = false;
     notifyListeners();
   }
@@ -73,7 +72,6 @@ class AuthController extends ChangeNotifier {
   @override
   void dispose() {
     _sub?.cancel();
-    _sessionWatchdog?.cancel();
     super.dispose();
   }
 }
