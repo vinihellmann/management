@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:management/core/services/app_env_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppAuthService {
@@ -11,6 +13,7 @@ class AppAuthService {
   static const _sessionDays = 7;
 
   final FirebaseAuth _auth;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   Stream<User?> get onAuthStateChanged => _auth.authStateChanges();
   User? get currentUser => _auth.currentUser;
@@ -41,13 +44,32 @@ class AppAuthService {
       password: password,
     );
 
-    final now = DateTime.now();
-    final until = now.add(const Duration(days: _sessionDays));
+    await _saveSession();
+    return cred;
+  }
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_kLastLoginAt, now.millisecondsSinceEpoch);
-    await prefs.setInt(_kRememberUntil, until.millisecondsSinceEpoch);
+  Future<UserCredential?> signInWithGoogle() async {
+    await _googleSignIn.initialize(
+      serverClientId: AppEnvService.instance.googleServerClientId,
+    );
 
+    final account = await _googleSignIn.authenticate();
+
+    final idToken = account.authentication.idToken;
+
+    final authz = await account.authorizationClient.authorizationForScopes(
+      const ['email', 'profile'],
+    );
+
+    final accessToken = authz?.accessToken;
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+
+    final cred = await _auth.signInWithCredential(credential);
+    await _saveSession();
     return cred;
   }
 
@@ -61,5 +83,14 @@ class AppAuthService {
     await prefs.remove(_kRememberUntil);
 
     await _auth.signOut();
+    await _googleSignIn.signOut();
+  }
+
+  Future<void> _saveSession() async {
+    final now = DateTime.now();
+    final until = now.add(const Duration(days: _sessionDays));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_kLastLoginAt, now.millisecondsSinceEpoch);
+    await prefs.setInt(_kRememberUntil, until.millisecondsSinceEpoch);
   }
 }
