@@ -1,26 +1,26 @@
-# 📦 Management
+# Management
 
-Sistema completo de gestão empresarial desenvolvido em **Flutter**, com arquitetura modular, design moderno e banco de dados local. Gerencie clientes, produtos e vendas com uma experiência fluida e responsiva.
+Sistema completo de gestão empresarial desenvolvido em Flutter, com arquitetura modular, design moderno e banco de dados local. Gerencie clientes, produtos e vendas com uma experiência fluida e responsiva.
 
 ---
 
-## 🧩 Módulos Atuais
+## Módulos Atuais
 
-- ✅ **Clientes**  
+- **Clientes**  
   Cadastro completo com CPF/CNPJ, endereço com busca de CEP, validações, ordenação e filtros dinâmicos.
 
-- ✅ **Produtos**  
+- **Produtos**  
   Suporte a múltiplas unidades com valores e estoque por unidade. Formulário moderno e visual detalhado.
 
-- ✅ **Vendas**  
+- **Vendas**  
   Venda com múltiplos itens, cliente vinculado, condições e formas de pagamento, status de venda e resumo por abas.
 
-- ✅ **Dashboard**  
+- **Dashboard**  
   Visão geral com cards de resumo, gráficos interativos por status da venda e totalizadores do mês.
 
 ---
 
-## 🧱 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```plaintext
 lib/
@@ -41,21 +41,21 @@ lib/
 
 ---
 
-## 🧪 Recursos Técnicos
+## Recursos Técnicos
 
-- ✅ Flutter 3.22+
-- ✅ Navegação com `go_router`
-- ✅ Estado com `provider`
-- ✅ Banco local com `sqflite`
-- ✅ Injeção com `ProxyProvider`
-- ✅ Suporte a temas claros/escuros com toggle
-- ✅ Layout moderno com cards, seções, ícones e responsividade
-- ✅ Migrations controladas e centralizadas
-- ✅ Arquitetura modular baseada em MVC
+- Flutter 3.22+
+- Navegação com `go_router`
+- Estado com `provider`
+- Banco local com `sqflite`
+- Injeção com `ProxyProvider`
+- Suporte a temas claros/escuros com toggle
+- Layout moderno com cards, seções, ícones e responsividade
+- Migrations controladas e centralizadas
+- Arquitetura modular baseada em MVC
 
 ---
 
-## 🚀 Instalação
+## Instalação
 
 1. **Clone o repositório**
 
@@ -78,7 +78,7 @@ flutter run
 
 ---
 
-## 🧑‍💻 Desenvolvido por
+## Desenvolvido por
 
 - Marcos Vinicius Hellmann Delfino  
 - Arquitetura: Flutter + Provider + SQFlite + MVC  
@@ -86,14 +86,14 @@ flutter run
 
 ---
 
-## 📌 Próximos passos
+## Próximos passos
 
-- 💳 Módulo financeiro
-- 📈 Gráficos avançados de vendas por período
-- 🧾 Geração de relatórios em PDF
+- Multi Tenant com controle de usuários
+- Gráficos avançados de vendas por período
+- Geração de relatórios em PDF
 
 ---
 
-## 📄 Licença
+## Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
