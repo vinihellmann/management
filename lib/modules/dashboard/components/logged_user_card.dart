@@ -7,7 +7,7 @@ class LoggedUserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthController>().user;
+    final auth = context.watch<AuthController>().session?.user;
     final theme = Theme.of(context);
 
     final String email = auth?.email ?? '';
