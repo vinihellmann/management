@@ -230,7 +230,7 @@ class AppAuthService {
         .get();
 
     if (usersSnap.docs.isEmpty) {
-      throw Exception('E-mail não está vinculado a nenhuma empresa ativa.');
+      throw FirebaseAuthException(code: 'unknow-email');
     }
 
     final userDocSnap = usersSnap.docs.first; // tenants/{tenantId}/users/{uid}
@@ -242,7 +242,8 @@ class AppAuthService {
         .collection('tenants')
         .doc(tenantId)
         .get();
-    if (!tenantDoc.exists) throw Exception('Empresa não encontrada.');
+
+    if (!tenantDoc.exists) throw FirebaseAuthException(code: 'tenant-not-found');
     final t = tenantDoc.data()!;
 
     final name = (t['name'] ?? '-') as String;
@@ -251,15 +252,15 @@ class AppAuthService {
     final updatedAt = (t['updatedAt'] as Timestamp).toDate();
 
     final active = (t['active'] ?? false) as bool;
-    if (!active) throw Exception('Empresa inativa.');
+    if (!active) throw FirebaseAuthException(code: 'tenant-inactive');
 
     final licenseTs = t['licenseUntil'];
     if (licenseTs == null) {
-      throw Exception('Licença ausente para esta empresa.');
+      throw FirebaseAuthException(code: 'license-not-found');
     }
     final licenseUntil = (licenseTs as Timestamp).toDate();
     if (licenseUntil.isBefore(DateTime.now())) {
-      throw Exception('Licença expirada em ${licenseUntil.toIso8601String()}.');
+      throw FirebaseAuthException(code: 'license-expired');
     }
 
     await _persistTenantCache(

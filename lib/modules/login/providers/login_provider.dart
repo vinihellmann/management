@@ -102,6 +102,16 @@ class LoginController extends ChangeNotifier {
 
   String mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
+      case 'license-expired':
+        return 'Licença da empresa expirada.';
+      case 'license-not-found':
+        return 'Licença não encontrada para a empresa.';
+      case 'tenant-not-found':
+        return 'Empresa não encontrada.';
+      case 'tenant-inactive':
+        return 'Empresa inativada.';
+      case 'unknow-email':
+        return 'E-mail não vinculado a nenhuma empresa ativa.';
       case 'user-not-found':
       case 'invalid-credential':
       case 'wrong-password':
