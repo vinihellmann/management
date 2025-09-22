@@ -4,28 +4,15 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:management/core/constants/app_storage_names.dart';
 import 'package:management/core/services/app_env_service.dart';
+import 'package:management/modules/auth/enums/auth_role_enum.dart';
 import 'package:management/modules/auth/models/auth_session.dart';
 import 'package:management/modules/auth/models/auth_tenant_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppAuthService {
   AppAuthService({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
-
-  static const _kLastLoginAt = 'auth.lastLoginAt';
-  static const _kRememberUntil = 'auth.rememberUntil';
-  static const _sessionDays = 7;
-
-  static const _kTenantId = 'auth.tenantId';
-  static const _kTenantLicense = 'auth.tenantLicenseUntil';
-  static const _kTenantName = 'auth.tenantName';
-  static const _kTenantDocument = 'auth.tenantDocument';
-  static const _kTenantActive = 'auth.tenantActive';
-  static const _kTenantCreatedAt = 'auth.tenantCreatedAt';
-  static const _kTenantUpdatedAt = 'auth.tenantUpdatedAt';
-
-  static const _kTenantRole = 'auth.tenantRole';
-  static const _kTenantIsAdmin = 'auth.tenantIsAdmin';
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -39,8 +26,8 @@ class AppAuthService {
 
   Future<bool> get isSessionValid async {
     final prefs = await SharedPreferences.getInstance();
-    final untilMillis = prefs.getInt(_kRememberUntil);
-    final untilTenantLicense = prefs.getInt(_kTenantLicense);
+    final untilMillis = prefs.getInt(AppStorageNames.kRememberUntil);
+    final untilTenantLicense = prefs.getInt(AppStorageNames.kTenantLicense);
 
     if (_auth.currentUser == null) return false;
     if (untilMillis == null || untilTenantLicense == null) return false;
@@ -91,7 +78,17 @@ class AppAuthService {
 
     try {
       final tenant = await _resolveAndValidateTenant(cred.user!);
-      _authSession = AuthSession(user: cred.user!, tenant: tenant);
+
+      final prefs = await SharedPreferences.getInstance();
+      final roleStr = prefs.getString(AppStorageNames.kUserRole) ?? 'USER';
+      final userRole = UserRole.fromString(roleStr);
+
+      _authSession = AuthSession(
+        user: cred.user!,
+        tenant: tenant,
+        userRole: userRole,
+      );
+
       return _authSession!;
     } on Exception catch (e) {
       log(e.toString());
@@ -122,7 +119,17 @@ class AppAuthService {
 
     try {
       final tenant = await _resolveAndValidateTenant(cred.user!);
-      _authSession = AuthSession(user: cred.user!, tenant: tenant);
+
+      final prefs = await SharedPreferences.getInstance();
+      final roleStr = prefs.getString(AppStorageNames.kUserRole) ?? 'USER';
+      final userRole = UserRole.fromString(roleStr);
+
+      _authSession = AuthSession(
+        user: cred.user!,
+        tenant: tenant,
+        userRole: userRole,
+      );
+
       return _authSession!;
     } on Exception catch (e) {
       log(e.toString());
@@ -137,19 +144,18 @@ class AppAuthService {
 
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_kLastLoginAt);
-    await prefs.remove(_kRememberUntil);
+    await prefs.remove(AppStorageNames.kLastLoginAt);
+    await prefs.remove(AppStorageNames.kRememberUntil);
 
-    await prefs.remove(_kTenantId);
-    await prefs.remove(_kTenantLicense);
-    await prefs.remove(_kTenantName);
-    await prefs.remove(_kTenantDocument);
-    await prefs.remove(_kTenantActive);
-    await prefs.remove(_kTenantCreatedAt);
-    await prefs.remove(_kTenantUpdatedAt);
+    await prefs.remove(AppStorageNames.kTenantId);
+    await prefs.remove(AppStorageNames.kTenantLicense);
+    await prefs.remove(AppStorageNames.kTenantName);
+    await prefs.remove(AppStorageNames.kTenantDocument);
+    await prefs.remove(AppStorageNames.kTenantActive);
+    await prefs.remove(AppStorageNames.kTenantCreatedAt);
+    await prefs.remove(AppStorageNames.kTenantUpdatedAt);
 
-    await prefs.remove(_kTenantIsAdmin);
-    await prefs.remove(_kTenantRole);
+    await prefs.remove(AppStorageNames.kUserRole);
 
     _authSession = null;
 
@@ -159,10 +165,16 @@ class AppAuthService {
 
   Future<void> _saveSession() async {
     final now = DateTime.now();
-    final until = now.add(const Duration(days: _sessionDays));
+    final until = now.add(const Duration(days: AppStorageNames.kSessionDays));
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_kLastLoginAt, now.millisecondsSinceEpoch);
-    await prefs.setInt(_kRememberUntil, until.millisecondsSinceEpoch);
+    await prefs.setInt(
+      AppStorageNames.kLastLoginAt,
+      now.millisecondsSinceEpoch,
+    );
+    await prefs.setInt(
+      AppStorageNames.kRememberUntil,
+      until.millisecondsSinceEpoch,
+    );
   }
 
   Future<void> _persistTenantCache({
@@ -175,25 +187,36 @@ class AppAuthService {
     required DateTime updatedAt,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_kTenantId, tenantId);
-    await prefs.setInt(_kTenantLicense, licenseUntil.millisecondsSinceEpoch);
-    await prefs.setString(_kTenantName, name);
-    await prefs.setString(_kTenantDocument, document);
-    await prefs.setBool(_kTenantActive, active);
-    await prefs.setInt(_kTenantCreatedAt, createdAt.millisecondsSinceEpoch);
-    await prefs.setInt(_kTenantUpdatedAt, updatedAt.millisecondsSinceEpoch);
+    await prefs.setString(AppStorageNames.kTenantId, tenantId);
+    await prefs.setInt(
+      AppStorageNames.kTenantLicense,
+      licenseUntil.millisecondsSinceEpoch,
+    );
+    await prefs.setString(AppStorageNames.kTenantName, name);
+    await prefs.setString(AppStorageNames.kTenantDocument, document);
+    await prefs.setBool(AppStorageNames.kTenantActive, active);
+    await prefs.setInt(
+      AppStorageNames.kTenantCreatedAt,
+      createdAt.millisecondsSinceEpoch,
+    );
+    await prefs.setInt(
+      AppStorageNames.kTenantUpdatedAt,
+      updatedAt.millisecondsSinceEpoch,
+    );
   }
 
   Future<AuthSession?> _restoreAuthSessionFromCache() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final tenantId = prefs.getString(_kTenantId);
-    final name = prefs.getString(_kTenantName);
-    final document = prefs.getString(_kTenantDocument);
-    final active = prefs.getBool(_kTenantActive);
-    final createdAtMs = prefs.getInt(_kTenantCreatedAt);
-    final updatedAtMs = prefs.getInt(_kTenantUpdatedAt);
-    final licMs = prefs.getInt(_kTenantLicense);
+    final tenantId = prefs.getString(AppStorageNames.kTenantId);
+    final name = prefs.getString(AppStorageNames.kTenantName);
+    final document = prefs.getString(AppStorageNames.kTenantDocument);
+    final active = prefs.getBool(AppStorageNames.kTenantActive);
+    final createdAtMs = prefs.getInt(AppStorageNames.kTenantCreatedAt);
+    final updatedAtMs = prefs.getInt(AppStorageNames.kTenantUpdatedAt);
+    final licMs = prefs.getInt(AppStorageNames.kTenantLicense);
+    final roleStr = prefs.getString(AppStorageNames.kUserRole) ?? 'USER';
+    final userRole = UserRole.fromString(roleStr);
 
     if (_auth.currentUser == null ||
         tenantId == null ||
@@ -216,7 +239,11 @@ class AppAuthService {
       licenseUntil: DateTime.fromMillisecondsSinceEpoch(licMs),
     );
 
-    return AuthSession(user: _auth.currentUser!, tenant: tenantSession);
+    return AuthSession(
+      user: _auth.currentUser!,
+      tenant: tenantSession,
+      userRole: userRole,
+    );
   }
 
   Future<AuthTenantSession> _resolveAndValidateTenant(User firebaseUser) async {
@@ -243,9 +270,11 @@ class AppAuthService {
         .doc(tenantId)
         .get();
 
-    if (!tenantDoc.exists) throw FirebaseAuthException(code: 'tenant-not-found');
-    final t = tenantDoc.data()!;
+    if (!tenantDoc.exists) {
+      throw FirebaseAuthException(code: 'tenant-not-found');
+    }
 
+    final t = tenantDoc.data()!;
     final name = (t['name'] ?? '-') as String;
     final document = (t['document'] ?? '-') as String;
     final createdAt = (t['createdAt'] as Timestamp).toDate();
@@ -258,10 +287,17 @@ class AppAuthService {
     if (licenseTs == null) {
       throw FirebaseAuthException(code: 'license-not-found');
     }
+
     final licenseUntil = (licenseTs as Timestamp).toDate();
     if (licenseUntil.isBefore(DateTime.now())) {
       throw FirebaseAuthException(code: 'license-expired');
     }
+
+    final userData = userDocSnap.data();
+    final roleStr = (userData['role'] ?? 'USER') as String;
+    final role = UserRole.fromString(roleStr);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppStorageNames.kUserRole, role.asString);
 
     await _persistTenantCache(
       tenantId: tenantId,
@@ -272,10 +308,6 @@ class AppAuthService {
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
-
-    // final userData = userDocSnap.data();
-    // final role = (userData['role'] ?? 'USER') as String;
-    // final isAdmin = role == 'MASTER';
 
     return AuthTenantSession(
       name: name,

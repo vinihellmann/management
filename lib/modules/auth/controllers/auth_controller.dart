@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:management/core/services/app_auth_service.dart';
+import 'package:management/modules/auth/enums/auth_role_enum.dart';
 import 'package:management/modules/auth/models/auth_session.dart';
 
 class AuthController extends ChangeNotifier {
@@ -23,6 +24,12 @@ class AuthController extends ChangeNotifier {
   String? get tenantId => _session?.tenant.tenantId;
   String? get tenantName => _session?.tenant.name;
   DateTime? get licenseUntil => _session?.tenant.licenseUntil;
+
+  bool get isMaster => _session?.userRole == UserRole.master;
+  bool get isUser => _session?.userRole == UserRole.user;
+  bool get isManager =>
+      _session?.userRole == UserRole.master ||
+      _session?.userRole == UserRole.manager;
 
   Future<void> init() async {
     await _service.init();

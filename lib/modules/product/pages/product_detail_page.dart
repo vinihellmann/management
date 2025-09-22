@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_base_detail_page.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/core/extensions/extensions.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/modules/product/models/product_model.dart';
 import 'package:management/modules/product/providers/product_detail_provider.dart';
@@ -46,6 +47,8 @@ class _ProductDetailView extends StatelessWidget {
         if (result == true && context.mounted) context.pop(true);
       },
       onDelete: () async {
+        if (!context.isManager) return;
+
         final confirmed = await Utils.showDeleteDialog(context);
         if (confirmed == true) {
           await provider.delete(product);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
+import 'package:management/core/extensions/extensions.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/core/themes/app_colors.dart';
 
@@ -102,7 +103,7 @@ class AppBaseDetailPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (options != null) ...options!,
-          if (onDelete != null)
+          if (onDelete != null && context.isManager)
             AppButton(type: AppButtonType.remove, onPressed: onDelete),
           if (onEdit != null)
             AppButton(type: AppButtonType.edit, onPressed: onEdit),

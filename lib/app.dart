@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:management/core/extensions/extensions.dart';
 import 'package:management/core/models/app_dependencies.dart';
 import 'package:management/core/router/app_router.dart';
-import 'package:management/core/themes/theme_notifier.dart';
-import 'package:management/modules/auth/controllers/auth_controller.dart';
 import 'package:management/shared/providers/global/global_providers.dart';
 import 'package:provider/provider.dart';
 
@@ -25,15 +24,11 @@ class _ManagementApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = context.watch<ThemeNotifier>();
-    final auth = context.watch<AuthController>();
-    final appRouter = AppRouter(auth).router;
-
     return MaterialApp.router(
       title: 'NexGestor',
       debugShowCheckedModeBanner: false,
-      theme: themeNotifier.currentTheme,
-      routerConfig: appRouter,
+      theme: context.theme.currentTheme,
+      routerConfig: AppRouter(context.auth).router,
     );
   }
 }

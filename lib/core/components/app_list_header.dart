@@ -11,7 +11,10 @@ class AppListHeader extends StatelessWidget {
     required this.filterContent,
     required this.onClearFilter,
     required this.onSearchFilter,
+    required this.showAddButton
   });
+
+  final bool showAddButton;
 
   final int totalItemsShown;
   final int totalItems;
@@ -45,10 +48,7 @@ class AppListHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Total de registros',
-                  style: theme.textTheme.bodySmall,
-                ),
+                Text('Total de registros', style: theme.textTheme.bodySmall),
                 Text(
                   '$totalItemsShown de $totalItems',
                   style: AppTextStyles.bodyMedium.copyWith(
@@ -65,17 +65,23 @@ class AppListHeader extends StatelessWidget {
             icon: Icons.filter_alt_outlined,
           ),
           SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: onAdd,
-            style: ButtonStyle(
-              elevation: WidgetStatePropertyAll(0),
-              padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 5)),
-              shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(30)
-              ))
+          if (showAddButton) ...[
+            ElevatedButton(
+              onPressed: onAdd,
+              style: ButtonStyle(
+                elevation: WidgetStatePropertyAll(0),
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(vertical: 5),
+                ),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(30),
+                  ),
+                ),
+              ),
+              child: Icon(Icons.add),
             ),
-            child: Icon(Icons.add),
-          ),
+          ],
         ],
       ),
     );

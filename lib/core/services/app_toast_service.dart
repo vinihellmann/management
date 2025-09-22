@@ -26,7 +26,7 @@ class AppToastService {
   }) {
     _show(
       message: message,
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.tertiary,
       toastLength: toastLength,
     );
   }
@@ -48,7 +48,7 @@ class AppToastService {
   }) {
     _show(
       message: message,
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       toastLength: toastLength,
     );
   }

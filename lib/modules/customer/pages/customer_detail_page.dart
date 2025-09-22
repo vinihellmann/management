@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/components/app_base_detail_page.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/core/extensions/extensions.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/providers/customer_detail_provider.dart';
@@ -55,6 +56,8 @@ class _CustomerDetailView extends StatelessWidget {
         BaseDetailInfo(Icons.edit_location, 'Complemento', c.complement),
       ],
       onDelete: () async {
+        if (!context.isManager) return;
+
         final confirmed = await Utils.showDeleteDialog(context);
         if (confirmed == true) {
           await provider.delete(c);
