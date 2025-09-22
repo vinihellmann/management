@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:management/modules/auth/controllers/auth_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:management/core/extensions/extensions.dart';
 
 class LoggedUserCard extends StatelessWidget {
   const LoggedUserCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthController>().session?.user;
+    final user = context.auth.session?.user;
     final theme = Theme.of(context);
 
-    final String email = auth?.email ?? '';
-    final String? name = auth?.displayName;
-    final String? photoUrl = auth?.photoURL;
+    final String email = user?.email ?? '';
+    final String? name = user?.displayName;
+    final String? photoUrl = user?.photoURL;
 
     return Card(
       elevation: 0,
@@ -61,7 +60,7 @@ class _Avatar extends StatelessWidget {
     }
 
     final initials = _initialsFromName(name);
-    
+
     return CircleAvatar(
       radius: 24,
       backgroundColor: bg,

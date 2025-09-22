@@ -38,6 +38,7 @@ class _SaleListView extends StatelessWidget {
       body: Column(
         children: [
           AppListHeader(
+            showAddButton: true,
             totalItems: provider.totalItems,
             totalItemsShown: provider.totalItemsShown,
             onAdd: () async {

@@ -4,6 +4,7 @@ import 'package:management/core/components/app_base_detail_page.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_section_description.dart';
 import 'package:management/core/constants/app_route_names.dart';
+import 'package:management/core/extensions/extensions.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/core/themes/app_colors.dart';
 import 'package:management/modules/sale/models/sale_model.dart';
@@ -58,6 +59,8 @@ class _SaleDetailView extends StatelessWidget {
           : null,
       onDelete: showEditAndDelete
           ? () async {
+              if (!context.isManager) return;
+
               final confirmed = await Utils.showDeleteDialog(context);
               if (confirmed == true) {
                 await provider.delete(sale);
