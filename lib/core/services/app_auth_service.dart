@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:management/core/constants/app_storage_names.dart';
 import 'package:management/core/services/app_env_service.dart';
+import 'package:management/core/services/app_secure_storage_service.dart';
 import 'package:management/modules/auth/enums/auth_role_enum.dart';
 import 'package:management/modules/auth/models/auth_session.dart';
 import 'package:management/modules/auth/models/auth_tenant_session.dart';
@@ -144,18 +145,9 @@ class AppAuthService {
 
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(AppStorageNames.kLastLoginAt);
-    await prefs.remove(AppStorageNames.kRememberUntil);
+    await prefs.clear();
 
-    await prefs.remove(AppStorageNames.kTenantId);
-    await prefs.remove(AppStorageNames.kTenantLicense);
-    await prefs.remove(AppStorageNames.kTenantName);
-    await prefs.remove(AppStorageNames.kTenantDocument);
-    await prefs.remove(AppStorageNames.kTenantActive);
-    await prefs.remove(AppStorageNames.kTenantCreatedAt);
-    await prefs.remove(AppStorageNames.kTenantUpdatedAt);
-
-    await prefs.remove(AppStorageNames.kUserRole);
+    await AppSecureStorageService.remove(AppStorageNames.kUserRole);
 
     _authSession = null;
 
@@ -215,7 +207,7 @@ class AppAuthService {
     final createdAtMs = prefs.getInt(AppStorageNames.kTenantCreatedAt);
     final updatedAtMs = prefs.getInt(AppStorageNames.kTenantUpdatedAt);
     final licMs = prefs.getInt(AppStorageNames.kTenantLicense);
-    final roleStr = prefs.getString(AppStorageNames.kUserRole) ?? 'USER';
+    final roleStr = await AppSecureStorageService.getString(AppStorageNames.kUserRole) ?? 'USER';
     final userRole = UserRole.fromString(roleStr);
 
     if (_auth.currentUser == null ||
@@ -296,8 +288,7 @@ class AppAuthService {
     final userData = userDocSnap.data();
     final roleStr = (userData['role'] ?? 'USER') as String;
     final role = UserRole.fromString(roleStr);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppStorageNames.kUserRole, role.asString);
+    await AppSecureStorageService.setString(AppStorageNames.kUserRole, role.asString);
 
     await _persistTenantCache(
       tenantId: tenantId,
