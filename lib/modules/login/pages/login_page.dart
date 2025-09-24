@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/constants/app_asset_names.dart';
+import 'package:management/modules/auth/controllers/auth_controller.dart';
 import 'package:management/modules/login/providers/login_provider.dart';
+import 'package:management/shared/formatters/input_formatters.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -9,7 +11,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (c) => LoginController(c.read()),
+      create: (c) => LoginController(c.read<AuthController>()),
       child: const _LoginPageView(),
     );
   }
@@ -21,7 +23,6 @@ class _LoginPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<LoginController>();
-    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -44,6 +45,16 @@ class _LoginPageView extends StatelessWidget {
                         children: [
                           const _Header(),
                           const SizedBox(height: 24),
+                          TextFormField(
+                            controller: ctrl.cgc,
+                            textInputAction: TextInputAction.next,
+                            inputFormatters: [InputFormatters.cnpjMask],
+                            decoration: const InputDecoration(
+                              labelText: 'CNPJ',
+                            ),
+                            validator: _validateCNPJ,
+                          ),
+                          const SizedBox(height: 12),
                           TextFormField(
                             controller: ctrl.email,
                             textInputAction: TextInputAction.next,
@@ -94,66 +105,18 @@ class _LoginPageView extends StatelessWidget {
                               child: SizedBox(
                                 width: 24,
                                 height: 24,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
                             ),
                           ] else ...[
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: ctrl.resetPassword,
-                                child: const Text('Esqueci minha senha'),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
+                            const SizedBox(height: 24),
                             SizedBox(
                               height: 48,
                               child: FilledButton(
                                 onPressed: () async => await ctrl.signIn(),
                                 child: const Text('Acessar'),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    color: theme.dividerColor.withValues(
-                                      alpha: 0.5,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    'ou',
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    color: theme.dividerColor.withValues(
-                                      alpha: 0.5,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              height: 48,
-                              child: OutlinedButton.icon(
-                                onPressed: () async =>
-                                    await ctrl.signInWithGoogle(),
-                                icon: Image.asset(
-                                  AppAssetNames.googleLogoPath,
-                                  width: 20,
-                                  height: 20,
-                                ),
-                                label: Text(
-                                  'Entrar com Google',
-                                  style: theme.textTheme.bodyMedium,
-                                ),
                               ),
                             ),
                           ],
@@ -169,6 +132,12 @@ class _LoginPageView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static String? _validateCNPJ(String? v) {
+    final value = (v ?? '').trim();
+    if (value.isEmpty) return 'Informe o CNPJ da empresa';
+    return null;
   }
 
   static String? _validateEmail(String? v) {

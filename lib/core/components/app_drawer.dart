@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_asset_names.dart';
 import 'package:management/core/constants/app_route_names.dart';
-import 'package:management/core/extensions/extensions.dart';
+import 'package:management/modules/auth/controllers/auth_controller.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authCtrl = context.read<AuthController>();
     final currentRoute = GoRouterState.of(context).uri.toString();
     final theme = Theme.of(context);
 
@@ -80,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                       color: theme.colorScheme.error,
                     ),
                   ),
-                  onTap: () => context.auth.signOut(),
+                  onTap: () => authCtrl.signOut(),
                 ),
               ),
             ),

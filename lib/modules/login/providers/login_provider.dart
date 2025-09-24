@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:management/core/services/app_toast_service.dart';
 import 'package:management/modules/auth/controllers/auth_controller.dart';
 
@@ -12,6 +9,8 @@ class LoginController extends ChangeNotifier {
   final AuthController _authController;
 
   final formKey = GlobalKey<FormState>();
+
+  final cgc = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -29,56 +28,30 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
-  User? get user => _authController.user;
+  User? get user => _authController.session?.firebaseUser;
 
   Future<void> signIn() async {
     final form = formKey.currentState;
 
     if (form == null || !form.validate()) {
-      AppToastService.showError('Preencha e corriga os campos para continuar.');
+      AppToastService.showError('Preencha os campos para continuar.');
       return;
     }
 
     _setIsLoading(true);
     try {
-      await _authController.signIn(email.text.trim(), password.text.trim());
-    } on FirebaseAuthException catch (e) {
-      AppToastService.showError(mapFirebaseError(e));
+      final err = await _authController.signIn(
+        cgc.text.trim(),
+        email.text.trim(),
+        password.text.trim(),
+      );
+
+      if (err != null) {
+        AppToastService.showError(err);
+        return;
+      }
     } catch (_) {
       AppToastService.showError('Falha inesperada. Tente novamente.');
-    } finally {
-      _setIsLoading(false);
-    }
-  }
-
-  Future<void> signInWithGoogle() async {
-    _setIsLoading(true);
-    try {
-      await _authController.signInWithGoogle();
-    } on FirebaseAuthException catch (e) {
-      log(e.toString());
-      AppToastService.showError(mapFirebaseError(e));
-    } on GoogleSignInException catch (e) {
-      log(e.toString());
-      if (e.code == GoogleSignInExceptionCode.canceled) return;
-      AppToastService.showError(e.description.toString());
-    } catch (e) {
-      log(e.toString());
-      AppToastService.showError('Falha ao entrar com Google. Tente novamente.');
-    } finally {
-      _setIsLoading(false);
-    }
-  }
-
-  Future<void> resetPassword() async {
-    _setIsLoading(true);
-    try {
-      await _authController.resetPassword(email.text.trim());
-      AppToastService.showSuccess(
-        'Enviamos um e-mail para redefinir sua senha.',
-      );
-    } on FirebaseAuthException catch (e) {
-      AppToastService.showError(mapFirebaseError(e));
     } finally {
       _setIsLoading(false);
     }
@@ -102,6 +75,8 @@ class LoginController extends ChangeNotifier {
 
   String mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
+      case 'user-not-found-in-tenant':
+        return 'Usuário não encontrado na empresa informada.';
       case 'license-expired':
         return 'Licença da empresa expirada.';
       case 'license-not-found':

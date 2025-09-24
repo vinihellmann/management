@@ -6,7 +6,7 @@ import 'package:management/core/components/app_loader.dart';
 import 'package:management/core/components/app_pagination.dart';
 import 'package:management/core/components/app_text_field.dart';
 import 'package:management/core/constants/app_route_names.dart';
-import 'package:management/core/extensions/extensions.dart';
+import 'package:management/core/extensions/auth_extensions.dart';
 import 'package:management/modules/customer/components/customer_list_item.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/providers/customer_list_provider.dart';

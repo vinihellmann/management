@@ -1,5 +1,6 @@
 class AppRouteNames {
   static const String splash = '/splash';
+  static const String blocked = '/blocked';
 
   static const String login = '/login';
 

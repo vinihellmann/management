@@ -28,7 +28,6 @@ dependencies:
   share_plus: ^11.0.0
   shared_preferences: ^2.5.3
   sqflite: ^2.4.2
-  google_sign_in: ^7.1.1
   flutter_dotenv: ^6.0.0
   cloud_firestore: ^6.0.1
   flutter_secure_storage: ^9.2.4
@@ -55,6 +54,5 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
-    - .env
     - assets/images/
     - assets/jsons/

@@ -13,6 +13,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Utils {
+  static String normalizeCgc(String input) {
+    return input.replaceAll(RegExp(r'\D'), '');
+  }
+  
   static Future<void> exportDatabase(BuildContext context) async {
     try {
       final dbPath = await getDatabasesPath();

@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'management-da095',
     storageBucket: 'management-da095.firebasestorage.app',
   );
+
 }

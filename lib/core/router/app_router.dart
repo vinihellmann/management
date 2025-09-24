@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:management/core/constants/app_route_names.dart';
 import 'package:management/modules/auth/controllers/auth_controller.dart';
+import 'package:management/modules/auth/models/enums/auth_status.dart';
+import 'package:management/modules/auth/pages/blocked_page.dart';
 import 'package:management/modules/customer/models/customer_model.dart';
 import 'package:management/modules/customer/pages/customer_detail_page.dart';
 import 'package:management/modules/customer/pages/customer_form_page.dart';
@@ -21,6 +23,7 @@ import 'package:management/modules/sale/pages/sale_detail_page.dart';
 import 'package:management/modules/sale/pages/sale_form_edit_item_page.dart';
 import 'package:management/modules/sale/pages/sale_form_page.dart';
 import 'package:management/modules/sale/pages/sale_list_page.dart';
+import 'package:management/modules/splash/pages/splash_page.dart';
 
 class AppRouter {
   AppRouter(this.auth);
@@ -31,17 +34,43 @@ class AppRouter {
 
   late final GoRouter router = GoRouter(
     observers: [routerObserver],
-    initialLocation: AppRouteNames.dashboard,
+    initialLocation: AppRouteNames.splash,
     refreshListenable: auth,
     redirect: (context, state) {
-      final loggedIn = auth.isLoggedIn;
-      final goingToLogin = state.matchedLocation == AppRouteNames.login;
+      final here = state.matchedLocation;
+      final isBoot = auth.status == AuthStatus.bootstrapping;
+      final isIn = auth.status == AuthStatus.authenticated;
+      final isBlock = auth.status == AuthStatus.blocked;
 
-      if (!loggedIn && !goingToLogin) return AppRouteNames.login;
-      if (loggedIn && goingToLogin) return AppRouteNames.dashboard;
+      if (isBoot) {
+        return here == AppRouteNames.splash ? null : AppRouteNames.splash;
+      }
+
+      if (isBlock) {
+        return here == AppRouteNames.blocked ? null : AppRouteNames.blocked;
+      }
+
+      if (!isIn) {
+        return here == AppRouteNames.login ? null : AppRouteNames.login;
+      }
+
+      if (here == AppRouteNames.login || here == AppRouteNames.splash) {
+        return AppRouteNames.dashboard;
+      }
+
       return null;
     },
     routes: [
+      GoRoute(
+        path: AppRouteNames.splash,
+        name: AppRouteNames.splash,
+        builder: (context, state) => const SplashPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.blocked,
+        name: AppRouteNames.blocked,
+        builder: (context, state) => const BlockedPage(),
+      ),
       GoRoute(
         path: AppRouteNames.login,
         name: AppRouteNames.login,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:management/core/components/app_button.dart';
 import 'package:management/core/components/app_layout.dart';
-import 'package:management/core/extensions/extensions.dart';
+import 'package:management/core/extensions/auth_extensions.dart';
 import 'package:management/core/models/base_detail_info.dart';
 import 'package:management/core/themes/app_colors.dart';
 
